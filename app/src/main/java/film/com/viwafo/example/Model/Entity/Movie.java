@@ -1,6 +1,7 @@
 package film.com.viwafo.example.Model.Entity;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;
 
@@ -15,6 +16,7 @@ public class Movie implements Serializable {
     private String voteAverage;
     private String overview;
     private String isAdult;
+    private Drawable drawable;
 
     public Movie() {
     }
@@ -82,5 +84,13 @@ public class Movie implements Serializable {
 
     public void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
+    }
+
+    public Drawable getDrawable() {
+        return drawable;
+    }
+
+    public void setDrawable(Drawable drawable) {
+        this.drawable = drawable;
     }
 }

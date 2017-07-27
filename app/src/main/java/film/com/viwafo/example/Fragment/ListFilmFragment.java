@@ -7,6 +7,7 @@ import android.widget.ListView;
 import java.util.List;
 import java.util.zip.Inflater;
 
+import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapter;
 import film.com.viwafo.example.R;
 
@@ -28,7 +29,7 @@ public class ListFilmFragment extends BaseFragment {
 
     @Override
     protected void mapData() {
-        CustomAdapter customAdapter = new CustomAdapter(getContext());
+        CustomAdapter customAdapter = new CustomAdapter(getContext(), (MainActivity) getActivity());
         lvMovies.setAdapter(customAdapter);
 
     }

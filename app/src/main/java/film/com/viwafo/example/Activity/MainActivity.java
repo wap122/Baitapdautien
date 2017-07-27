@@ -17,7 +17,9 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Fragment.ListFilmFragment;
+import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Model.ParseData;
 import film.com.viwafo.example.R;
@@ -28,6 +30,7 @@ import film.com.viwafo.example.Adapter.PagerAdapter;
  */
 public class MainActivity extends BaseActivity {
     private TabLayout tabLayout;
+    private BookmarkFimlFragment bookmarkFimlFragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class MainActivity extends BaseActivity {
         ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
+        bookmarkFimlFragment = new BookmarkFimlFragment();
 
         createViewPager(viewPager);
         customViewpagerTabs();
@@ -98,7 +102,7 @@ public class MainActivity extends BaseActivity {
     private void createViewPager(ViewPager viewPager) {
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
         pagerAdapter.addFrag(new ListFilmFragment(), "Tab1");
-        pagerAdapter.addFrag(new ListFilmFragment(), "Tab2");
+        pagerAdapter.addFrag(bookmarkFimlFragment, "Tab2");
         pagerAdapter.addFrag(new ListFilmFragment(), "Tab3");
         pagerAdapter.addFrag(new ListFilmFragment(), "Tab4");
         viewPager.setAdapter(pagerAdapter);
@@ -129,5 +133,8 @@ public class MainActivity extends BaseActivity {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_main, popup.getMenu());
         popup.show();
+    }
+    public void addFavorite(Movie movie) {
+        bookmarkFimlFragment.setAdapter(movie);
     }
 }

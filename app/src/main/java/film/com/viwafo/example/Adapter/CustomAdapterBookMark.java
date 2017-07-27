@@ -1,6 +1,5 @@
 package film.com.viwafo.example.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,27 +10,26 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import film.com.viwafo.example.Activity.MainActivity;
-import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
 /**
- * Created by minhl on 26/07/2017.
+ * Created by minhl on 27/07/2017.
  */
 
-public class CustomAdapter extends BaseAdapter {
-    private Context context;
-    private List<Movie> listMovie = MovieSqlite.getInstance(null).getAllMovies();
-    private MainActivity mainActivity;
+public class CustomAdapterBookMark extends BaseAdapter {
 
-    public CustomAdapter(Context context, MainActivity activity) {
+    private Context context;
+    private List<Movie> listMovie = new ArrayList<>();
+
+    public CustomAdapterBookMark(Context context, List<Movie> listMovie) {
         super();
         this.context = context;
-        mainActivity = activity;
+        this.listMovie = listMovie;
     }
 
     @Override
@@ -52,7 +50,7 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final ViewHolder viewHolder;
+        ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder = new ViewHolder();
@@ -69,33 +67,31 @@ public class CustomAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        final Movie movie = listMovie.get(position);
+        Movie movie = listMovie.get(position);
 
         viewHolder.tvTitle.setText(movie.getTitle());
-        Picasso.with(context)
-                .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
-                .placeholder(R.drawable.ic_holder)
-                .into(viewHolder.imgPoster);
+        viewHolder.imgPoster.setImageDrawable(movie.getDrawable());
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
         viewHolder.tvOverview.setText(movie.getOverview());
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
-        viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewHolder.imgIsFavorite.getDrawable().getConstantState().equals
-                        (context.getResources().getDrawable(
-                                R.drawable.ic_star_border_black).getConstantState())) {
-                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
-                    movie.setDrawable(viewHolder.imgPoster.getDrawable());
-//                    mainActivity.addFavorite(movie);
-                } else {
-                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
-                }
-            }
-        });
+        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
+
+//        viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (viewHolder.imgIsFavorite.getDrawable().getConstantState().equals
+//                        (context.getResources().getDrawable(
+//                                R.drawable.ic_star_border_black).getConstantState())) {
+//                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
+//
+//                } else {
+//                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
+//                }
+//            }
+//        });
 
         return convertView;
     }
