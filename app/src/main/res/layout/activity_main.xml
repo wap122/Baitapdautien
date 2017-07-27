@@ -7,6 +7,8 @@
     android:fitsSystemWindows="true"
     tools:context=".Activity.MainActivity">
 
+    <include layout="@layout/content_main" />
+
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            android:elevation="4dp"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <RelativeLayout
@@ -35,28 +38,34 @@
                     android:src="@drawable/menublack" />
 
                 <ImageView
-                    android:id="@+id/img_search"
+                    android:id="@+id/imageView3"
                     android:layout_width="@dimen/size_vertical"
                     android:layout_height="@dimen/size_vertical"
-                    android:src="@drawable/ic_search_white"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_alignTop="@+id/imageView2"
-                    android:layout_toLeftOf="@+id/img_menu"
-                    android:layout_toStartOf="@+id/img_menu" />
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/optionmenu"
+                    android:onClick="showPopup"
+                    android:src="@drawable/menublack" />
+
+                <android.support.v7.widget.SearchView
+                    android:id="@+id/search_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/img_menu"
+                    android:iconifiedByDefault="true"
+                    android:queryHint="Search" />
 
                 <ImageView
+                    android:id="@+id/imageView2"
                     android:layout_width="@dimen/size_vertical"
-                    android:layout_toLeftOf="@id/img_search"
-                    android:layout_centerVertical="true"
                     android:layout_height="@dimen/size_vertical"
-                    android:id="@+id/imageView2" />
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_main" />
 
 </android.support.design.widget.CoordinatorLayout>

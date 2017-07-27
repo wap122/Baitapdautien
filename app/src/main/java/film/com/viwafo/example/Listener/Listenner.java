@@ -9,5 +9,5 @@ import film.com.viwafo.example.Model.Entity.Movie;
  */
 
 public interface Listenner {
-    void setAdapter(Movie movie);
+    void changeAdapter();
 }

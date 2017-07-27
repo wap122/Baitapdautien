@@ -26,7 +26,7 @@ public class MovieSqlite extends SQLiteOpenHelper {
     private static final String COLUMN_MOVIE_TITLE = "Movie_Name";
     private static final String COLUMN_MOVIE_POSTERURL = "Movie_PosterURL";
     private static final String COLUMN_MOVIE_RELEASE_DATE = "Movie_ReleaseDate";
-    private static final String COLUMN_MOVIE_VOTE_AVERAGE = "Movie_VoteAverage";
+    public static final String COLUMN_MOVIE_VOTE_AVERAGE = "Movie_VoteAverage";
     private static final String COLUMN_MOVIE_OVERVIEW = "Movie_Overview";
     private static final String COLUMN_MOVIE_ISADULT = "Movie_IsAdult";
 
@@ -93,7 +93,7 @@ public class MovieSqlite extends SQLiteOpenHelper {
 
     public List<Movie> getAllMovies() {
         List<Movie> listMovies = new ArrayList<>();
-        String selectQuery = "SELECT  * FROM " + TABLE_MOVIE;
+        String selectQuery = "SELECT * FROM " + TABLE_MOVIE;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -111,19 +111,29 @@ public class MovieSqlite extends SQLiteOpenHelper {
                 listMovies.add(movie);
             } while (cursor.moveToNext());
         }
-
         return listMovies;
     }
 
-    public int getStudentCount() {
-        String countQuery = "SELECT  * FROM " + TABLE_MOVIE;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(countQuery, null);
+    public List<Movie> sortWithRank(String rank) {
+        List<Movie> listMovies = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_MOVIE, null, null,
+                null, null, null, rank + " DESC", null);
 
-        int count = cursor.getCount();
-        cursor.close();
-
-        return count;
+        if (cursor.moveToFirst()) {
+            do {
+                Movie movie = new Movie();
+                movie.setId(Integer.parseInt(cursor.getString(0)));
+                movie.setTitle(cursor.getString(1));
+                movie.setPosterUrl(cursor.getString(2));
+                movie.setReleaseDate(cursor.getString(3));
+                movie.setVoteAverage(cursor.getString(4));
+                movie.setOverview(cursor.getString(5));
+                movie.setIsAdult(cursor.getString(6));
+                listMovies.add(movie);
+            } while (cursor.moveToNext());
+        }
+        return listMovies;
     }
 
 

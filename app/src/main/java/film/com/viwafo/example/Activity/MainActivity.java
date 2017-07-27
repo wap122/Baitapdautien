@@ -8,17 +8,24 @@ import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
+
 import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Fragment.ListFilmFragment;
+import film.com.viwafo.example.Fragment.SettingFragment;
+import film.com.viwafo.example.Model.Entity.FavoriteList;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Model.ParseData;
@@ -28,9 +35,13 @@ import film.com.viwafo.example.Adapter.PagerAdapter;
 /**
  * Created by macintoshhd on 7/23/17.
  */
+
 public class MainActivity extends BaseActivity {
     private TabLayout tabLayout;
     private BookmarkFimlFragment bookmarkFimlFragment;
+    private ListFilmFragment listFilmFragment;
+    private TextView tvFavoriteNum;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,11 +52,28 @@ public class MainActivity extends BaseActivity {
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
         bookmarkFimlFragment = new BookmarkFimlFragment();
+        listFilmFragment = new ListFilmFragment();
+        searchView = (SearchView) findViewById(R.id.search_view);
 
+        setupSearchView();
         createViewPager(viewPager);
         customViewpagerTabs();
         customViewpagerTab2();
         getDatatFromServer();
+    }
+
+    private void setupSearchView() {
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                return false;
+//            }
+//        });
     }
 
     private void getDatatFromServer() {
@@ -79,6 +107,7 @@ public class MainActivity extends BaseActivity {
         View view = LayoutInflater.from(this).inflate(R.layout.custom_tab_2,null);
         TextView tv = (TextView) view.findViewById(R.id.tv_number);
         tv.bringToFront();
+        tvFavoriteNum = tv;
         tabLayout.getTabAt(1).setCustomView(view);
 
     }
@@ -101,14 +130,14 @@ public class MainActivity extends BaseActivity {
 
     private void createViewPager(ViewPager viewPager) {
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
-        pagerAdapter.addFrag(new ListFilmFragment(), "Tab1");
+        pagerAdapter.addFrag(listFilmFragment, "Tab1");
         pagerAdapter.addFrag(bookmarkFimlFragment, "Tab2");
-        pagerAdapter.addFrag(new ListFilmFragment(), "Tab3");
+        pagerAdapter.addFrag(new SettingFragment(), "Tab3");
         pagerAdapter.addFrag(new ListFilmFragment(), "Tab4");
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
     }
 
     @Override
@@ -135,6 +164,15 @@ public class MainActivity extends BaseActivity {
         popup.show();
     }
     public void addFavorite(Movie movie) {
-        bookmarkFimlFragment.setAdapter(movie);
+        FavoriteList.getInstance().add(movie);
+        bookmarkFimlFragment.changeAdapter();
     }
+
+    public void changeFavoriteNum() {
+        tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
+    }
+    public void changeFilmFragment(List<Movie> list) {
+        listFilmFragment.changeListviewWithSort(list);
+    }
+
 }

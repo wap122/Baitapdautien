@@ -2,6 +2,7 @@ package film.com.viwafo.example.Adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import java.util.List;
 
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
+import film.com.viwafo.example.Model.Entity.FavoriteList;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
@@ -25,13 +27,14 @@ import film.com.viwafo.example.R;
 
 public class CustomAdapter extends BaseAdapter {
     private Context context;
-    private List<Movie> listMovie = MovieSqlite.getInstance(null).getAllMovies();
+    private List<Movie> listMovie;
     private MainActivity mainActivity;
 
-    public CustomAdapter(Context context, MainActivity activity) {
+    public CustomAdapter(MainActivity activity,List<Movie> list) {
         super();
-        this.context = context;
+        this.context= activity.getApplicationContext();
         mainActivity = activity;
+        listMovie = list;
     }
 
     @Override
@@ -50,11 +53,11 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
         if (convertView == null) {
-            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
+            viewHolder = new ViewHolder();
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             viewHolder.imgPoster = (ImageView) convertView.findViewById(R.id.img_poster);
             viewHolder.tvReleaseDate = (TextView) convertView.findViewById(R.id.tv_edit_releaseday);
@@ -69,7 +72,7 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         final Movie movie = listMovie.get(position);
-
+//        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
         viewHolder.tvTitle.setText(movie.getTitle());
         Picasso.with(context)
                 .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
@@ -81,7 +84,6 @@ public class CustomAdapter extends BaseAdapter {
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
-
         viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +92,8 @@ public class CustomAdapter extends BaseAdapter {
                                 R.drawable.ic_star_border_black).getConstantState())) {
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
                     movie.setDrawable(viewHolder.imgPoster.getDrawable());
-//                    mainActivity.addFavorite(movie);
+                    mainActivity.addFavorite(movie);
+                    mainActivity.changeFavoriteNum();
                 } else {
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
@@ -100,13 +103,13 @@ public class CustomAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private class ViewHolder {
-        TextView tvTitle;
-        ImageView imgPoster;
-        TextView tvReleaseDate;
-        TextView tvVoteAverage;
-        TextView tvOverview;
-        ImageView imgIsAdult;
-        ImageView imgIsFavorite;
+    private static class ViewHolder {
+        private TextView tvTitle;
+        private ImageView imgPoster;
+        private TextView tvReleaseDate;
+        private TextView tvVoteAverage;
+        private TextView tvOverview;
+        private ImageView imgIsAdult;
+        private ImageView imgIsFavorite;
     }
 }

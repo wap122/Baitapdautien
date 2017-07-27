@@ -9,6 +9,9 @@ import java.util.zip.Inflater;
 
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapter;
+import film.com.viwafo.example.Listener.Listenner;
+import film.com.viwafo.example.Model.Entity.Movie;
+import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
 /**
@@ -29,8 +32,11 @@ public class ListFilmFragment extends BaseFragment {
 
     @Override
     protected void mapData() {
-        CustomAdapter customAdapter = new CustomAdapter(getContext(), (MainActivity) getActivity());
-        lvMovies.setAdapter(customAdapter);
+        changeListviewWithSort(MovieSqlite.getInstance(null).getAllMovies());
+    }
 
+    public void changeListviewWithSort(List<Movie> list) {
+        CustomAdapter customAdapter = new CustomAdapter((MainActivity) getActivity(), list);
+        lvMovies.setAdapter(customAdapter);
     }
 }

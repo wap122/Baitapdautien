@@ -1,6 +1,7 @@
 package film.com.viwafo.example.Adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import film.com.viwafo.example.Activity.MainActivity;
+import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
+import film.com.viwafo.example.Model.Entity.FavoriteList;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
@@ -25,11 +29,15 @@ public class CustomAdapterBookMark extends BaseAdapter {
 
     private Context context;
     private List<Movie> listMovie = new ArrayList<>();
+    private BookmarkFimlFragment fragment;
+    private MainActivity mainActivity;
 
-    public CustomAdapterBookMark(Context context, List<Movie> listMovie) {
+    public CustomAdapterBookMark(MainActivity mainActivity, BookmarkFimlFragment fragment) {
         super();
-        this.context = context;
-        this.listMovie = listMovie;
+        this.context = mainActivity.getApplicationContext();
+        this.listMovie = FavoriteList.getInstance();
+        this.fragment = fragment;
+        this.mainActivity = mainActivity;
     }
 
     @Override
@@ -48,12 +56,12 @@ public class CustomAdapterBookMark extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder = new ViewHolder();
+            convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             viewHolder.imgPoster = (ImageView) convertView.findViewById(R.id.img_poster);
             viewHolder.tvReleaseDate = (TextView) convertView.findViewById(R.id.tv_edit_releaseday);
@@ -61,13 +69,14 @@ public class CustomAdapterBookMark extends BaseAdapter {
             viewHolder.tvOverview = (TextView) convertView.findViewById(R.id.tv_overview);
             viewHolder.imgIsFavorite = (ImageView) convertView.findViewById(R.id.img_favorite);
             viewHolder.imgIsAdult = (ImageView) convertView.findViewById(R.id.img_isadult);
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         Movie movie = listMovie.get(position);
+
+        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
 
         viewHolder.tvTitle.setText(movie.getTitle());
         viewHolder.imgPoster.setImageDrawable(movie.getDrawable());
@@ -77,21 +86,17 @@ public class CustomAdapterBookMark extends BaseAdapter {
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
-        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
+        ImageView img = (ImageView) convertView.findViewById(R.id.img_favorite);
+        img.setImageResource(R.drawable.ic_start_selected);
 
-//        viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (viewHolder.imgIsFavorite.getDrawable().getConstantState().equals
-//                        (context.getResources().getDrawable(
-//                                R.drawable.ic_star_border_black).getConstantState())) {
-//                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
-//
-//                } else {
-//                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
-//                }
-//            }
-//        });
+        viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FavoriteList.getInstance().remove(position);
+                fragment.changeAdapter();
+                mainActivity.changeFavoriteNum();
+            }
+        });
 
         return convertView;
     }
