@@ -51,11 +51,10 @@ public class CustomAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         final ViewHolder viewHolder;
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder = new ViewHolder();
+            convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             viewHolder.imgPoster = (ImageView) convertView.findViewById(R.id.img_poster);
             viewHolder.tvReleaseDate = (TextView) convertView.findViewById(R.id.tv_edit_releaseday);
@@ -82,6 +81,7 @@ public class CustomAdapter extends BaseAdapter {
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
+
         viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
