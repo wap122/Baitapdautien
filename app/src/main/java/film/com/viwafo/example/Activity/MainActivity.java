@@ -214,8 +214,9 @@ public class MainActivity extends BaseActivity {
     public void changeFavoriteNum() {
         tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
     }
-    public void changeFilmFragment(List<Movie> list) {
-        listFilmFragment.changeListview(list);
+
+    public void changeFilmFragment() {
+        listFilmFragment.changeListview();
 
     }
 

@@ -20,6 +20,7 @@ import java.util.List;
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Model.Entity.FavoriteList;
+import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
@@ -37,12 +38,12 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
     private ValueFilter valueFilter;
     private FavoriteList favoriteList;
 
-    public CustomAdapter(Activity activity, List<Movie> list) {
+    public CustomAdapter(Activity activity) {
         super();
         this.context = activity;
         mainActivity = (MainActivity) activity;
-        listMovie = list;
-        arrayListFilter = (ArrayList<Movie>) list;
+        listMovie = ListCurrentFilm.getInstance();
+        arrayListFilter = (ArrayList<Movie>) listMovie;
         favoriteList = FavoriteList.getInstance();
     }
 

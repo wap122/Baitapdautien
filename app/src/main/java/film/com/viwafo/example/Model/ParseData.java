@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.List;
 
 import film.com.viwafo.example.Activity.MainActivity;
+import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Fetcher.AsyncApi;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
@@ -42,7 +43,8 @@ public class ParseData {
                 MovieSqlite.getInstance(null).addMovie(new Movie(title,posterUrl,
                         realeaseDate,voteAverage,overview,isAdult));
             }
-            mainActivity.changeFilmFragment(MovieSqlite.getInstance(null).getAllMovies());
+            ListCurrentFilm.getInstance().addAll(0, MovieSqlite.getInstance(null).getAllMovies());
+            mainActivity.changeFilmFragment();
         } catch (JSONException e) {
             e.printStackTrace();
         }

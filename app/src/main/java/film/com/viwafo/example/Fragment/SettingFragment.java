@@ -12,6 +12,7 @@ import android.widget.PopupMenu;
 
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Listener.Listenner;
+import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
@@ -54,8 +55,9 @@ public class SettingFragment extends BaseFragment {
 //                MovieSqlite.getInstance(null).deleteDuplicate();
                 MainActivity mainActivity = (MainActivity) getActivity();
                 String rank = MovieSqlite.COLUMN_MOVIE_VOTE_AVERAGE;
-                mainActivity.changeFilmFragment(MovieSqlite.getInstance(null).
-                        sortWithRank(rank));
+                ListCurrentFilm.getInstance().clear();
+                ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).sortWithRank(rank));
+                mainActivity.changeFilmFragment();
                 return true;
             }
         });

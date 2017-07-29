@@ -36,8 +36,8 @@ public class ListFilmFragment extends BaseFragment {
     protected void mapData() {
     }
 
-    public void changeListview(List<Movie> list) {
-        customAdapter = new CustomAdapter(getActivity(), list);
+    public void changeListview() {
+        customAdapter = new CustomAdapter(getActivity());
         lvMovies.setAdapter(customAdapter);
     }
 

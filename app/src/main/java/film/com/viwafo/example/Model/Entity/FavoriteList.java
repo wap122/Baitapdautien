@@ -16,7 +16,6 @@ public class FavoriteList extends ArrayList<Movie> {
 
     private FavoriteList() {
         favorite = new boolean[MovieSqlite.getInstance(null).getAllMovies().size()];
-
     }
 
     public static synchronized FavoriteList getInstance() {

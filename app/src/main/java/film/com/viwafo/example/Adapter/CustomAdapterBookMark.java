@@ -92,7 +92,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
                 FavoriteList.getInstance().remove(position);
                 FavoriteList.getInstance().setFavorite(movie.getId(), false);
                 mainActivity.changeBookmarkFragment(null);
-                mainActivity.changeFilmFragment(MovieSqlite.getInstance(null).getAllMovies());
+                mainActivity.changeFilmFragment();
             }
         });
 
