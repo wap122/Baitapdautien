@@ -54,8 +54,8 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/img_menu"
-                    android:iconifiedByDefault="true"
-                    android:queryHint="Search" />
+                    android:iconifiedByDefault="false"
+                    android:queryHint="Search Movie" />
 
                 <ImageView
                     android:id="@+id/imageView2"

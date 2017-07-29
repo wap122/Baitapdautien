@@ -7,11 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import film.com.viwafo.example.Activity.MainActivity;
@@ -25,16 +28,22 @@ import film.com.viwafo.example.R;
  * Created by minhl on 26/07/2017.
  */
 
-public class CustomAdapter extends BaseAdapter {
+public class CustomAdapter extends BaseAdapter implements Filterable {
+
     private Context context;
     private List<Movie> listMovie;
+    private ArrayList<Movie> arrayListFilter;
     private MainActivity mainActivity;
+    private ValueFilter valueFilter;
+    private FavoriteList favoriteList;
 
-    public CustomAdapter(MainActivity activity,List<Movie> list) {
+    public CustomAdapter(Activity activity, List<Movie> list) {
         super();
-        this.context= activity.getApplicationContext();
-        mainActivity = activity;
+        this.context = activity;
+        mainActivity = (MainActivity) activity;
         listMovie = list;
+        arrayListFilter = (ArrayList<Movie>) list;
+        favoriteList = FavoriteList.getInstance();
     }
 
     @Override
@@ -55,6 +64,7 @@ public class CustomAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
+
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder = new ViewHolder();
@@ -72,18 +82,29 @@ public class CustomAdapter extends BaseAdapter {
         }
 
         final Movie movie = listMovie.get(position);
+
 //        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
+
         viewHolder.tvTitle.setText(movie.getTitle());
         Picasso.with(context)
                 .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
                 .placeholder(R.drawable.ic_holder)
                 .into(viewHolder.imgPoster);
+
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
         viewHolder.tvOverview.setText(movie.getOverview());
+        if (favoriteList.isFavorite(position)) {
+            viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
+        } else {
+            viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
+        }
+
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
+
+
         viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,9 +113,13 @@ public class CustomAdapter extends BaseAdapter {
                                 R.drawable.ic_star_border_black).getConstantState())) {
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
                     movie.setDrawable(viewHolder.imgPoster.getDrawable());
+                    favoriteList.setFavorite(position, true);
+                    movie.setId(position);
                     mainActivity.addFavorite(movie);
                     mainActivity.changeFavoriteNum();
                 } else {
+                    favoriteList.setFavorite(position, false);
+                    mainActivity.changeBookmarkFragment(movie);
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
             }
@@ -103,13 +128,47 @@ public class CustomAdapter extends BaseAdapter {
         return convertView;
     }
 
+    @Override
+    public Filter getFilter() {
+        if (valueFilter == null) {
+            valueFilter = new ValueFilter();
+        }
+        return valueFilter;
+    }
+
     private static class ViewHolder {
-        private TextView tvTitle;
-        private ImageView imgPoster;
-        private TextView tvReleaseDate;
-        private TextView tvVoteAverage;
-        private TextView tvOverview;
-        private ImageView imgIsAdult;
-        private ImageView imgIsFavorite;
+        private TextView tvTitle, tvReleaseDate, tvVoteAverage, tvOverview;
+        private ImageView imgPoster, imgIsAdult, imgIsFavorite;
+    }
+
+    private class ValueFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if (constraint != null && constraint.length() > 0) {
+                ArrayList<Movie> filterList = new ArrayList<>();
+                for (int i = 0; i < arrayListFilter.size(); i++) {
+                    if ((arrayListFilter.get(i).getTitle().toUpperCase())
+                            .contains(constraint.toString().toUpperCase())) {
+                        Movie movie;
+                        movie = arrayListFilter.get(i);
+                        filterList.add(movie);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = arrayListFilter.size();
+                results.values = arrayListFilter;
+            }
+            return results;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            listMovie = (List<Movie>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

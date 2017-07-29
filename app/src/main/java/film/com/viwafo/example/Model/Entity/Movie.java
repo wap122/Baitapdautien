@@ -93,4 +93,5 @@ public class Movie implements Serializable {
     public void setDrawable(Drawable drawable) {
         this.drawable = drawable;
     }
+
 }

@@ -1,6 +1,7 @@
 package film.com.viwafo.example.Fragment;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -19,6 +20,7 @@ import film.com.viwafo.example.R;
  */
 public class ListFilmFragment extends BaseFragment {
     private ListView lvMovies;
+    private CustomAdapter customAdapter;
 
     @Override
     protected int getResIdLayout() {
@@ -32,11 +34,18 @@ public class ListFilmFragment extends BaseFragment {
 
     @Override
     protected void mapData() {
-        changeListviewWithSort(MovieSqlite.getInstance(null).getAllMovies());
     }
 
-    public void changeListviewWithSort(List<Movie> list) {
-        CustomAdapter customAdapter = new CustomAdapter((MainActivity) getActivity(), list);
+    public void changeListview(List<Movie> list) {
+        customAdapter = new CustomAdapter(getActivity(), list);
         lvMovies.setAdapter(customAdapter);
+    }
+
+    public CustomAdapter getCustomAdapter() {
+        return customAdapter;
+    }
+
+    public ListView getListview() {
+        return lvMovies;
     }
 }

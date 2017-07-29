@@ -16,7 +16,7 @@ import film.com.viwafo.example.R;
 /**
  * Created by macintoshhd on 7/23/17.
  */
-public class BookmarkFimlFragment extends BaseFragment implements Listenner {
+public class BookmarkFimlFragment extends BaseFragment {
     private ListView lvBookmark;
 
     @Override
@@ -33,10 +33,9 @@ public class BookmarkFimlFragment extends BaseFragment implements Listenner {
     protected void mapData() {
     }
 
-    @Override
     public void changeAdapter() {
         CustomAdapterBookMark customAdapter;
-        customAdapter = new CustomAdapterBookMark((MainActivity) getActivity(), this);
+        customAdapter = new CustomAdapterBookMark((MainActivity) getActivity());
         lvBookmark.setAdapter(customAdapter);
     }
 }

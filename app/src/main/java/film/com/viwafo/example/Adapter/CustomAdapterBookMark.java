@@ -29,14 +29,12 @@ public class CustomAdapterBookMark extends BaseAdapter {
 
     private Context context;
     private List<Movie> listMovie = new ArrayList<>();
-    private BookmarkFimlFragment fragment;
     private MainActivity mainActivity;
 
-    public CustomAdapterBookMark(MainActivity mainActivity, BookmarkFimlFragment fragment) {
+    public CustomAdapterBookMark(MainActivity mainActivity) {
         super();
         this.context = mainActivity.getApplicationContext();
         this.listMovie = FavoriteList.getInstance();
-        this.fragment = fragment;
         this.mainActivity = mainActivity;
     }
 
@@ -74,27 +72,27 @@ public class CustomAdapterBookMark extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        Movie movie = listMovie.get(position);
+        final Movie movie = listMovie.get(position);
 
-        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
 
         viewHolder.tvTitle.setText(movie.getTitle());
         viewHolder.imgPoster.setImageDrawable(movie.getDrawable());
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
         viewHolder.tvOverview.setText(movie.getOverview());
+
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
-        ImageView img = (ImageView) convertView.findViewById(R.id.img_favorite);
-        img.setImageResource(R.drawable.ic_start_selected);
+        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
 
         viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FavoriteList.getInstance().remove(position);
-                fragment.changeAdapter();
-                mainActivity.changeFavoriteNum();
+                FavoriteList.getInstance().setFavorite(movie.getId(), false);
+                mainActivity.changeBookmarkFragment(null);
+                mainActivity.changeFilmFragment(MovieSqlite.getInstance(null).getAllMovies());
             }
         });
 

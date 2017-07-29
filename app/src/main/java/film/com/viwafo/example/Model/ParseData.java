@@ -4,6 +4,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
+import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Fetcher.AsyncApi;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
@@ -13,14 +16,18 @@ import film.com.viwafo.example.R;
  * Created by macintoshhd on 7/23/17.
  */
 public class ParseData {
-    public static void getDataFormApi() {
-        String urlApi = "http://api.themoviedb.org/3/movie/popular?api_key=01d6eaad3bb353d05c20716701c51937&page=";
-        AsyncApi asyncApi = new AsyncApi();
-        asyncApi.execute(urlApi);
+    private MainActivity mainActivity;
 
+    public ParseData(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 
-    public static void createJson(String jsonStr) {
+    public void getDataFormApi(String urlApi) {
+        AsyncApi asyncApi = new AsyncApi(this);
+        asyncApi.execute(urlApi);
+    }
+
+    public void createDatabase(String jsonStr) {
         try {
             JSONObject jsonRootObject = new JSONObject(jsonStr);
             JSONArray jsonArray = jsonRootObject.optJSONArray("results");
@@ -35,7 +42,7 @@ public class ParseData {
                 MovieSqlite.getInstance(null).addMovie(new Movie(title,posterUrl,
                         realeaseDate,voteAverage,overview,isAdult));
             }
-
+            mainActivity.changeFilmFragment(MovieSqlite.getInstance(null).getAllMovies());
         } catch (JSONException e) {
             e.printStackTrace();
         }

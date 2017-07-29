@@ -1,12 +1,15 @@
 package film.com.viwafo.example.Activity;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -31,56 +34,96 @@ import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Model.ParseData;
 import film.com.viwafo.example.R;
 import film.com.viwafo.example.Adapter.PagerAdapter;
+import film.com.viwafo.example.Util.UtilPermissions;
+
+import static android.Manifest.permission.ACCESS_NETWORK_STATE;
+import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Created by macintoshhd on 7/23/17.
  */
 
 public class MainActivity extends BaseActivity {
+
+    private static final int REQUEST_PERMISSIONS = 1;
+
     private TabLayout tabLayout;
     private BookmarkFimlFragment bookmarkFimlFragment;
     private ListFilmFragment listFilmFragment;
     private TextView tvFavoriteNum;
     private SearchView searchView;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        createView();
+        createViewPager();
+        customViewpagerTabs();
+        customViewpagerTab2();
+        askForPermission();
+        getDatatFromServer();
+        setupSearchView();
+    }
+
+    public void changeBookmarkFragment(Movie movie) {
+        if (movie != null) {
+            FavoriteList.getInstance().remove(movie);
+        }
+
+        bookmarkFimlFragment.changeAdapter();
+        changeFavoriteNum();
+    }
+
+    private void createView() {
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
+        movieSqlite.onUpgrade(movieSqlite.getWritableDatabase(), 1, 2);
         bookmarkFimlFragment = new BookmarkFimlFragment();
         listFilmFragment = new ListFilmFragment();
         searchView = (SearchView) findViewById(R.id.search_view);
+    }
 
-        setupSearchView();
-        createViewPager(viewPager);
-        customViewpagerTabs();
-        customViewpagerTab2();
-        getDatatFromServer();
+    private void askForPermission() {
+        String[] PERMISSION = {INTERNET, ACCESS_NETWORK_STATE};
+        if (!UtilPermissions.hasPermissions(this, PERMISSION)) {
+            ActivityCompat.requestPermissions(this, PERMISSION, REQUEST_PERMISSIONS);
+        }
     }
 
     private void setupSearchView() {
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                return false;
-//            }
-//        });
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if (TextUtils.isEmpty(newText)) {
+                    listFilmFragment.getCustomAdapter().getFilter().filter("");
+                    listFilmFragment.getListview().clearTextFilter();
+                } else {
+                    listFilmFragment.getCustomAdapter().getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
     }
 
     private void getDatatFromServer() {
         if (!checkConnection()) {
             return;
         }
-        ParseData.getDataFormApi();
+        String urlApi = "http://api.themoviedb.org/3/movie/popular?api_key=01d6eaad3bb353d05c20716701c51937&page=";
+        ParseData parseData = new ParseData(this);
+        parseData.getDataFormApi(urlApi);
+
 
     }
 
@@ -99,21 +142,21 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, "Mạng sida rồi", Toast.LENGTH_SHORT).show();
             return false;
         }
-        Toast.makeText(this, "Xài Wifi chùa dc rồi đó", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Xài Wifi chùa dc rồi đó", Toast.LENGTH_SHORT).show();
         return true;
     }
 
     private void customViewpagerTab2() {
         View view = LayoutInflater.from(this).inflate(R.layout.custom_tab_2,null);
-        TextView tv = (TextView) view.findViewById(R.id.tv_number);
-        tv.bringToFront();
-        tvFavoriteNum = tv;
+        tvFavoriteNum = (TextView) view.findViewById(R.id.tv_number);
+        tvFavoriteNum.bringToFront();
         tabLayout.getTabAt(1).setCustomView(view);
 
     }
 
     private void customViewpagerTabs() {
         createTabIcons(0, R.drawable.ic_home, "Movies");
+
         createTabIcons(2, R.drawable.ic_settings, "Setting");
         createTabIcons(3, R.drawable.ic_info, "About");
 
@@ -128,7 +171,7 @@ public class MainActivity extends BaseActivity {
         tabLayout.getTabAt(position).setCustomView(view);
     }
 
-    private void createViewPager(ViewPager viewPager) {
+    private void createViewPager() {
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
         pagerAdapter.addFrag(listFilmFragment, "Tab1");
         pagerAdapter.addFrag(bookmarkFimlFragment, "Tab2");
@@ -137,7 +180,7 @@ public class MainActivity extends BaseActivity {
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(4);
     }
 
     @Override
@@ -172,7 +215,27 @@ public class MainActivity extends BaseActivity {
         tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
     }
     public void changeFilmFragment(List<Movie> list) {
-        listFilmFragment.changeListviewWithSort(list);
+        listFilmFragment.changeListview(list);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        int permissionCheck = PackageManager.PERMISSION_GRANTED;
+        for (int permission : grantResults) {
+            permissionCheck = permissionCheck + permission;
+        }
+        if ((grantResults.length > 0) && permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            onPermissionsGranted(requestCode);
+        } else {
+            Toast.makeText(this, "Ko cấp quyền sao chạy dc :(", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+    }
+
+    private void onPermissionsGranted(int requestCode) {
+        Toast.makeText(this, "Đã dc cấp quyền", Toast.LENGTH_SHORT).show();
     }
 
 }

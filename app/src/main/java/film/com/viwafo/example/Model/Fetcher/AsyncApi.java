@@ -18,7 +18,11 @@ import film.com.viwafo.example.Util.IOUtil;
  * Created by macintoshhd on 7/23/17.
  */
 public class AsyncApi extends AsyncTask<String, Void, String> {
-    public String jsonStr;
+    private ParseData parseData;
+
+    public AsyncApi(ParseData parseData) {
+        this.parseData = parseData;
+    }
 
     @Override
     protected String doInBackground(String... params) {
@@ -27,11 +31,10 @@ public class AsyncApi extends AsyncTask<String, Void, String> {
     }
 
     private String getStringFromURL(String urlApi) {
-        String urlText = urlApi;
         InputStream in = null;
         BufferedReader br = null;
         try {
-            URL url = new URL(urlText);
+            URL url = new URL(urlApi);
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setAllowUserInteraction(false);
             httpURLConnection.setInstanceFollowRedirects(true);
@@ -64,7 +67,6 @@ public class AsyncApi extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        jsonStr = result;
-        ParseData.createJson(jsonStr);
+        parseData.createDatabase(result);
     }
 }
