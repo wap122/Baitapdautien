@@ -1,20 +1,11 @@
 package film.com.viwafo.example.Fragment;
 
 import android.support.v7.widget.SearchView;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 
-import java.util.List;
-import java.util.zip.Inflater;
 
-import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapter;
-import film.com.viwafo.example.Listener.Listenner;
-import film.com.viwafo.example.Model.Entity.Movie;
-import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
 /**
@@ -47,26 +38,25 @@ public class ListFilmFragment extends BaseFragment {
     public void changeListview() {
         customAdapter = new CustomAdapter(getActivity());
         lvMovies.setAdapter(customAdapter);
-//        setupSearchView();
     }
 
     private void setupSearchView() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                return true;
+                return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if (TextUtils.isEmpty(newText)) {
-                    customAdapter.getFilter().filter("");
-                    lvMovies.clearTextFilter();
-                } else {
+//                if (TextUtils.isEmpty(newText)) {
+//                    customAdapter.getFilter().filter("");
+//                    lvMovies.clearTextFilter();
+//                } else {
                     customAdapter.getFilter().filter(newText);
-                }
-                return true;
+//                }
+                return false;
             }
         });
     }

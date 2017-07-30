@@ -43,7 +43,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
         this.context = activity;
         mainActivity = (MainActivity) activity;
         listMovie = ListCurrentFilm.getInstance();
-        arrayListFilter = (ArrayList<Movie>) listMovie;
+        arrayListFilter = ListCurrentFilm.getInstance();
         favoriteList = FavoriteList.getInstance();
     }
 
@@ -105,7 +105,6 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
 
-
         viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +147,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             if (constraint != null && constraint.length() > 0) {
-                ArrayList<Movie> filterList = new ArrayList<>();
+                List<Movie> filterList = new ArrayList<>();
                 for (int i = 0; i < arrayListFilter.size(); i++) {
                     if ((arrayListFilter.get(i).getTitle().toUpperCase())
                             .contains(constraint.toString().toUpperCase())) {

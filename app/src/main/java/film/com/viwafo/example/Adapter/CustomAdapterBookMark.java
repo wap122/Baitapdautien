@@ -59,7 +59,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
         final ViewHolder viewHolder;
         if (convertView == null) {
             viewHolder = new ViewHolder();
-            convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
+            convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listviewbookmark, null);
             viewHolder.tvTitle = (TextView) convertView.findViewById(R.id.tv_title);
             viewHolder.imgPoster = (ImageView) convertView.findViewById(R.id.img_poster);
             viewHolder.tvReleaseDate = (TextView) convertView.findViewById(R.id.tv_edit_releaseday);

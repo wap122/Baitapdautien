@@ -13,6 +13,7 @@ import android.widget.PopupMenu;
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Listener.Listenner;
 import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
+import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
@@ -60,10 +61,12 @@ public class SettingFragment extends BaseFragment {
                         ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).sortWithRank(rank));
                         break;
                     }
+                    case 1: {
+                        ListCurrentFilm.getInstance().clear();
+                        ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).getAllMovies());
+                    }
                 }
                 mainActivity.changeFilmFragment();
-
-
                 return true;
             }
         });

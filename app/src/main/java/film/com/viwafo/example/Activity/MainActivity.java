@@ -38,6 +38,7 @@ import film.com.viwafo.example.Util.UtilPermissions;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Created by macintoshhd on 7/23/17.
@@ -91,10 +92,6 @@ public class MainActivity extends BaseActivity {
         if (!UtilPermissions.hasPermissions(this, PERMISSION)) {
             ActivityCompat.requestPermissions(this, PERMISSION, REQUEST_PERMISSIONS);
         }
-    }
-
-    public void setupSearchView() {
-
     }
 
     private void getDatatFromServer() {
