@@ -16,32 +16,29 @@ import film.com.viwafo.example.Model.Entity.Movie;
  */
 public class MovieSqlite extends SQLiteOpenHelper {
 
+    public static final String COLUMN_MOVIE_TITLE = "Movie_Name";
+    public static final String COLUMN_MOVIE_VOTE_AVERAGE = "Movie_VoteAverage";
     private static final int DATABASE_VERSION = 1;
-
     private static final String DATABASE_NAME = "Movie_Manager";
-
     private static final String TABLE_MOVIE = "Movie";
-
     private static final String COLUMN_MOVIE_ID = "Movie_Id";
-    private static final String COLUMN_MOVIE_TITLE = "Movie_Name";
     private static final String COLUMN_MOVIE_POSTERURL = "Movie_PosterURL";
     private static final String COLUMN_MOVIE_RELEASE_DATE = "Movie_ReleaseDate";
-    public static final String COLUMN_MOVIE_VOTE_AVERAGE = "Movie_VoteAverage";
     private static final String COLUMN_MOVIE_OVERVIEW = "Movie_Overview";
     private static final String COLUMN_MOVIE_ISADULT = "Movie_IsAdult";
 
 
     private static MovieSqlite instance;
 
+    private MovieSqlite(Context context) {
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    }
+
     public static synchronized MovieSqlite getInstance(Context context) {
         if (instance == null) {
             instance = new MovieSqlite(context);
         }
         return instance;
-    }
-
-    private MovieSqlite(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override

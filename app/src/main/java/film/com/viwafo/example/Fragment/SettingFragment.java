@@ -47,17 +47,23 @@ public class SettingFragment extends BaseFragment {
     }
 
     private void showCategoryMenu() {
-        PopupMenu popupMenu = new PopupMenu(getActivity(),btnCategory);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_category,popupMenu.getMenu());
+        PopupMenu popupMenu = new PopupMenu(getActivity(), btnCategory);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_category, popupMenu.getMenu());
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-//                MovieSqlite.getInstance(null).deleteDuplicate();
                 MainActivity mainActivity = (MainActivity) getActivity();
-                String rank = MovieSqlite.COLUMN_MOVIE_VOTE_AVERAGE;
-                ListCurrentFilm.getInstance().clear();
-                ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).sortWithRank(rank));
+                switch (item.getOrder()) {
+                    case 0: {
+                        String rank = MovieSqlite.COLUMN_MOVIE_VOTE_AVERAGE;
+                        ListCurrentFilm.getInstance().clear();
+                        ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).sortWithRank(rank));
+                        break;
+                    }
+                }
                 mainActivity.changeFilmFragment();
+
+
                 return true;
             }
         });

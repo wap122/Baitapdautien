@@ -112,6 +112,7 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
                 if (viewHolder.imgIsFavorite.getDrawable().getConstantState().equals
                         (context.getResources().getDrawable(
                                 R.drawable.ic_star_border_black).getConstantState())) {
+
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
                     movie.setDrawable(viewHolder.imgPoster.getDrawable());
                     favoriteList.setFavorite(position, true);

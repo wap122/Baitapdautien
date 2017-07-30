@@ -1,5 +1,7 @@
 package film.com.viwafo.example.Fragment;
 
+import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,6 +23,12 @@ import film.com.viwafo.example.R;
 public class ListFilmFragment extends BaseFragment {
     private ListView lvMovies;
     private CustomAdapter customAdapter;
+    private SearchView searchView;
+
+    public ListFilmFragment(SearchView searchView) {
+        super();
+        this.searchView = searchView;
+    }
 
     @Override
     protected int getResIdLayout() {
@@ -39,13 +47,27 @@ public class ListFilmFragment extends BaseFragment {
     public void changeListview() {
         customAdapter = new CustomAdapter(getActivity());
         lvMovies.setAdapter(customAdapter);
+//        setupSearchView();
     }
 
-    public CustomAdapter getCustomAdapter() {
-        return customAdapter;
-    }
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
 
-    public ListView getListview() {
-        return lvMovies;
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if (TextUtils.isEmpty(newText)) {
+                    customAdapter.getFilter().filter("");
+                    lvMovies.clearTextFilter();
+                } else {
+                    customAdapter.getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
     }
 }

@@ -38,7 +38,6 @@ import film.com.viwafo.example.Util.UtilPermissions;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Created by macintoshhd on 7/23/17.
@@ -60,13 +59,12 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        askForPermission();
         createView();
         createViewPager();
         customViewpagerTabs();
         customViewpagerTab2();
-        askForPermission();
         getDatatFromServer();
-        setupSearchView();
     }
 
     public void changeBookmarkFragment(Movie movie) {
@@ -84,7 +82,7 @@ public class MainActivity extends BaseActivity {
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
         movieSqlite.onUpgrade(movieSqlite.getWritableDatabase(), 1, 2);
         bookmarkFimlFragment = new BookmarkFimlFragment();
-        listFilmFragment = new ListFilmFragment();
+        listFilmFragment = new ListFilmFragment(searchView);
         searchView = (SearchView) findViewById(R.id.search_view);
     }
 
@@ -95,25 +93,8 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void setupSearchView() {
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return true;
-            }
+    public void setupSearchView() {
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (TextUtils.isEmpty(newText)) {
-                    listFilmFragment.getCustomAdapter().getFilter().filter("");
-                    listFilmFragment.getListview().clearTextFilter();
-                } else {
-                    listFilmFragment.getCustomAdapter().getFilter().filter(newText);
-                }
-                return true;
-            }
-        });
     }
 
     private void getDatatFromServer() {
@@ -123,8 +104,6 @@ public class MainActivity extends BaseActivity {
         String urlApi = "http://api.themoviedb.org/3/movie/popular?api_key=01d6eaad3bb353d05c20716701c51937&page=";
         ParseData parseData = new ParseData(this);
         parseData.getDataFormApi(urlApi);
-
-
     }
 
     public boolean checkConnection() {
@@ -176,7 +155,7 @@ public class MainActivity extends BaseActivity {
         pagerAdapter.addFrag(listFilmFragment, "Tab1");
         pagerAdapter.addFrag(bookmarkFimlFragment, "Tab2");
         pagerAdapter.addFrag(new SettingFragment(), "Tab3");
-        pagerAdapter.addFrag(new ListFilmFragment(), "Tab4");
+        pagerAdapter.addFrag(new SettingFragment(), "Tab4");
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
