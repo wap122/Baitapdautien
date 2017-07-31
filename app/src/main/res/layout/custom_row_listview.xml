@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="8dp"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Alien: Covenant"
+        android:textColor="@color/black"
         android:textSize="20sp"
         android:textStyle="bold|italic" />
 
@@ -29,7 +29,8 @@
         android:layout_marginStart="6dp"
         android:layout_toEndOf="@+id/img_poster"
         android:layout_toRightOf="@+id/img_poster"
-        android:text="Release Date: " />
+        android:text="Release Date: "
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tv_edit_releaseday"
@@ -49,7 +50,8 @@
         android:layout_alignLeft="@+id/tv_rd"
         android:layout_alignStart="@+id/tv_rd"
         android:layout_below="@+id/tv_rd"
-        android:text="Rating: " />
+        android:text="Rating: "
+        android:textColor="@color/black" />
 
     <TextView
         android:id="@+id/tv_edit_vote"
@@ -81,23 +83,23 @@
         android:layout_below="@+id/textView2"
         android:ellipsize="end"
         android:maxLines="4"
-        android:text="@string/text" />
+        android:textColor="@color/black" />
 
     <ImageView
+        android:id="@+id/img_favorite"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_star_border_black"
-        android:id="@+id/img_favorite"
         android:layout_above="@+id/tv_overview"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:src="@drawable/ic_star_border_black" />
 
     <ImageView
         android:id="@+id/img_isadult"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:src="@drawable/ic_adult"
         android:layout_alignTop="@+id/img_favorite"
         android:layout_toLeftOf="@+id/img_favorite"
-        android:layout_toStartOf="@+id/img_favorite" />
+        android:layout_toStartOf="@+id/img_favorite"
+        android:src="@drawable/ic_adult" />
 </RelativeLayout>

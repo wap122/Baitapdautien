@@ -1,8 +1,6 @@
 package film.com.viwafo.example.Adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,34 +15,32 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import film.com.viwafo.example.Activity.MainActivity;
-import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
+import film.com.viwafo.example.Listener.OnFavotiteClick;
 import film.com.viwafo.example.Model.Entity.FavoriteList;
 import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
 import film.com.viwafo.example.Model.Entity.Movie;
-import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
 /**
  * Created by minhl on 26/07/2017.
  */
 
-public class CustomAdapter extends BaseAdapter implements Filterable {
+public class CustomAdapterList extends BaseAdapter implements Filterable {
 
-    private Context context;
     private List<Movie> listMovie;
     private ArrayList<Movie> arrayListFilter;
-    private MainActivity mainActivity;
+    private Context context;
     private ValueFilter valueFilter;
     private FavoriteList favoriteList;
+    private OnFavotiteClick listenner;
 
-    public CustomAdapter(Activity activity) {
+    public CustomAdapterList(Context context, OnFavotiteClick listenner) {
         super();
-        this.context = activity;
-        mainActivity = (MainActivity) activity;
+        this.context = context;
         listMovie = ListCurrentFilm.getInstance();
         arrayListFilter = ListCurrentFilm.getInstance();
         favoriteList = FavoriteList.getInstance();
+        this.listenner = listenner;
     }
 
     @Override
@@ -65,7 +61,6 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
             viewHolder = new ViewHolder();
@@ -76,22 +71,17 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
             viewHolder.tvOverview = (TextView) convertView.findViewById(R.id.tv_overview);
             viewHolder.imgIsFavorite = (ImageView) convertView.findViewById(R.id.img_favorite);
             viewHolder.imgIsAdult = (ImageView) convertView.findViewById(R.id.img_isadult);
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
         final Movie movie = listMovie.get(position);
-
-//        viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
-
         viewHolder.tvTitle.setText(movie.getTitle());
         Picasso.with(context)
                 .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
                 .placeholder(R.drawable.ic_holder)
                 .into(viewHolder.imgPoster);
-
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
         viewHolder.tvOverview.setText(movie.getOverview());
@@ -114,13 +104,13 @@ public class CustomAdapter extends BaseAdapter implements Filterable {
 
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
                     movie.setDrawable(viewHolder.imgPoster.getDrawable());
-                    favoriteList.setFavorite(position, true);
                     movie.setId(position);
-                    mainActivity.addFavorite(movie);
-                    mainActivity.changeFavoriteNum();
+                    favoriteList.add(movie);
+                    listenner.onEvent();
+
                 } else {
-                    favoriteList.setFavorite(position, false);
-                    mainActivity.changeBookmarkFragment(movie);
+                    favoriteList.remove(movie);
+                    listenner.onEvent();
                     viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
             }

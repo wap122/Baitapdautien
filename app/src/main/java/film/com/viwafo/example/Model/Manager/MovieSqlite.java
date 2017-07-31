@@ -104,8 +104,10 @@ public class MovieSqlite extends SQLiteOpenHelper {
                 movie.setVoteAverage(cursor.getString(4));
                 movie.setOverview(cursor.getString(5));
                 movie.setIsAdult(cursor.getString(6));
-
                 listMovies.add(movie);
+                if (listMovies.size() == 20) {
+                    break;
+                }
             } while (cursor.moveToNext());
         }
         return listMovies;

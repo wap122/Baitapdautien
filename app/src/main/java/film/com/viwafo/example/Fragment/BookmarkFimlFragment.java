@@ -1,23 +1,26 @@
 package film.com.viwafo.example.Fragment;
 
-import android.content.Context;
 import android.view.View;
 import android.widget.ListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapterBookMark;
-import film.com.viwafo.example.Listener.Listenner;
-import film.com.viwafo.example.Model.Entity.Movie;
+import film.com.viwafo.example.Listener.OnFavotiteClick;
+import film.com.viwafo.example.Model.Entity.FavoriteList;
 import film.com.viwafo.example.R;
 
 /**
  * Created by macintoshhd on 7/23/17.
  */
-public class BookmarkFimlFragment extends BaseFragment {
+public class BookmarkFimlFragment extends BaseFragment implements OnFavotiteClick {
+
     private ListView lvBookmark;
+    private CustomAdapterBookMark customAdapter;
+    private OnFavotiteClick listenner;
+
+    public BookmarkFimlFragment() {
+        super();
+    }
 
     @Override
     protected int getResIdLayout() {
@@ -31,11 +34,21 @@ public class BookmarkFimlFragment extends BaseFragment {
 
     @Override
     protected void mapData() {
+        changeAdapter();
     }
 
     public void changeAdapter() {
-        CustomAdapterBookMark customAdapter;
-        customAdapter = new CustomAdapterBookMark((MainActivity) getActivity());
+        customAdapter = new CustomAdapterBookMark(getContext(), listenner);
         lvBookmark.setAdapter(customAdapter);
+    }
+
+    @Override
+    public void onEvent() {
+        customAdapter.notifyDataSetChanged();
+        MainActivity.tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
+    }
+
+    public void setListenner(OnFavotiteClick listenner) {
+        this.listenner = listenner;
     }
 }

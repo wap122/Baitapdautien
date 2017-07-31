@@ -2,17 +2,12 @@ package film.com.viwafo.example.Adapter;
 
 
 import android.content.Context;
-import android.content.MutableContextWrapper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import film.com.viwafo.example.Fragment.BaseFragment;
-import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
-import film.com.viwafo.example.Fragment.ListFilmFragment;
 
 /**
  * Created by minhl on 10/07/2017.

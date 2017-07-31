@@ -1,6 +1,5 @@
 package film.com.viwafo.example.Model.Entity;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 
 import java.io.Serializable;

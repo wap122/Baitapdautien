@@ -16,29 +16,24 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
-
+import film.com.viwafo.example.Adapter.PagerAdapter;
 import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Fragment.ListFilmFragment;
 import film.com.viwafo.example.Fragment.SettingFragment;
 import film.com.viwafo.example.Model.Entity.FavoriteList;
-import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Model.ParseData;
 import film.com.viwafo.example.R;
-import film.com.viwafo.example.Adapter.PagerAdapter;
 import film.com.viwafo.example.Util.UtilPermissions;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * Created by macintoshhd on 7/23/17.
@@ -47,11 +42,11 @@ import static android.Manifest.permission.READ_CONTACTS;
 public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_PERMISSIONS = 1;
-
+    public static TextView tvFavoriteNum;
+    public static ParseData parseData;
     private TabLayout tabLayout;
     private BookmarkFimlFragment bookmarkFimlFragment;
     private ListFilmFragment listFilmFragment;
-    private TextView tvFavoriteNum;
     private SearchView searchView;
     private ViewPager viewPager;
 
@@ -66,24 +61,39 @@ public class MainActivity extends BaseActivity {
         customViewpagerTabs();
         customViewpagerTab2();
         getDatatFromServer();
+        setupSearchView();
     }
 
-    public void changeBookmarkFragment(Movie movie) {
-        if (movie != null) {
-            FavoriteList.getInstance().remove(movie);
-        }
+    private void setupSearchView() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
 
-        bookmarkFimlFragment.changeAdapter();
-        changeFavoriteNum();
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                if (TextUtils.isEmpty(newText)) {
+                    listFilmFragment.getCustomAdapter().getFilter().filter("");
+                    listFilmFragment.getLvMovies().clearTextFilter();
+                } else {
+                    listFilmFragment.getCustomAdapter().getFilter().filter(newText);
+                }
+                return true;
+            }
+        });
     }
 
     private void createView() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
+        FavoriteList.getInstance();
         movieSqlite.onUpgrade(movieSqlite.getWritableDatabase(), 1, 2);
         bookmarkFimlFragment = new BookmarkFimlFragment();
-        listFilmFragment = new ListFilmFragment(searchView);
+        listFilmFragment = new ListFilmFragment(bookmarkFimlFragment);
+        bookmarkFimlFragment.setListenner(listFilmFragment);
         searchView = (SearchView) findViewById(R.id.search_view);
     }
 
@@ -98,9 +108,8 @@ public class MainActivity extends BaseActivity {
         if (!checkConnection()) {
             return;
         }
-        String urlApi = "http://api.themoviedb.org/3/movie/popular?api_key=01d6eaad3bb353d05c20716701c51937&page=";
-        ParseData parseData = new ParseData(this);
-        parseData.getDataFormApi(urlApi);
+        parseData = new ParseData(listFilmFragment);
+        parseData.getDataFormApi();
     }
 
     public boolean checkConnection() {
@@ -123,7 +132,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void customViewpagerTab2() {
-        View view = LayoutInflater.from(this).inflate(R.layout.custom_tab_2,null);
+        View view = LayoutInflater.from(this).inflate(R.layout.custom_tab_2, null);
         tvFavoriteNum = (TextView) view.findViewById(R.id.tv_number);
         tvFavoriteNum.bringToFront();
         tabLayout.getTabAt(1).setCustomView(view);
@@ -132,7 +141,6 @@ public class MainActivity extends BaseActivity {
 
     private void customViewpagerTabs() {
         createTabIcons(0, R.drawable.ic_home, "Movies");
-
         createTabIcons(2, R.drawable.ic_settings, "Setting");
         createTabIcons(3, R.drawable.ic_info, "About");
 
@@ -181,19 +189,6 @@ public class MainActivity extends BaseActivity {
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.menu_main, popup.getMenu());
         popup.show();
-    }
-    public void addFavorite(Movie movie) {
-        FavoriteList.getInstance().add(movie);
-        bookmarkFimlFragment.changeAdapter();
-    }
-
-    public void changeFavoriteNum() {
-        tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
-    }
-
-    public void changeFilmFragment() {
-        listFilmFragment.changeListview();
-
     }
 
     @Override

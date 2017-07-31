@@ -14,12 +14,13 @@ import film.com.viwafo.example.Activity.BaseActivity;
  * Created by macintoshhd on 7/23/17.
  */
 public abstract class BaseFragment extends Fragment {
-    BaseActivity activity;
     protected Context context;
-
+    BaseActivity activity;
 
     protected abstract int getResIdLayout();
+
     protected abstract void mapView(View view);
+
     protected abstract void mapData();
 
     @Nullable

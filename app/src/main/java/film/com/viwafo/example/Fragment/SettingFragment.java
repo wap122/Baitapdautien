@@ -1,19 +1,14 @@
 package film.com.viwafo.example.Fragment;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupMenu;
 
 import film.com.viwafo.example.Activity.MainActivity;
-import film.com.viwafo.example.Listener.Listenner;
 import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
-import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
@@ -66,7 +61,6 @@ public class SettingFragment extends BaseFragment {
                         ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).getAllMovies());
                     }
                 }
-                mainActivity.changeFilmFragment();
                 return true;
             }
         });
