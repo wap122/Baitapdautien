@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.FavoriteList;
+import film.com.viwafo.example.Model.Entity.ListFavorite;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 
@@ -24,14 +24,14 @@ public class CustomAdapterBookMark extends BaseAdapter {
 
     private Context context;
     private List<Movie> listMovie = new ArrayList<>();
-    private FavoriteList favoriteList;
+    private ListFavorite favoriteList;
     private OnFavotiteClick listenner;
 
     public CustomAdapterBookMark(Context context, OnFavotiteClick listenner) {
         super();
         this.context = context;
-        this.listMovie = FavoriteList.getInstance();
-        favoriteList = FavoriteList.getInstance();
+        this.listMovie = ListFavorite.getInstance();
+        favoriteList = ListFavorite.getInstance();
         this.listenner = listenner;
     }
 
@@ -91,12 +91,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
     }
 
     private class ViewHolder {
-        TextView tvTitle;
-        ImageView imgPoster;
-        TextView tvReleaseDate;
-        TextView tvVoteAverage;
-        TextView tvOverview;
-        ImageView imgIsAdult;
-        ImageView imgIsFavorite;
+        TextView tvTitle, tvReleaseDate, tvVoteAverage, tvOverview;
+        ImageView imgPoster, imgIsAdult, imgIsFavorite;
     }
 }

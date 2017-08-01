@@ -2,31 +2,24 @@ package film.com.viwafo.example.Model.Entity;
 
 import java.util.ArrayList;
 
-import film.com.viwafo.example.Model.Manager.MovieSqlite;
-
 /**
  * Created by minhl on 27/07/2017.
  */
 
-public class FavoriteList extends ArrayList<Movie> {
+public class ListFavorite extends ArrayList<Movie> {
 
-    private static FavoriteList instance;
-    private boolean[] favorite;
+    private static ListFavorite instance;
+    public boolean[] favorite;
 
-    private FavoriteList() {
-        favorite = new boolean[MovieSqlite.getInstance(null).getAllMovies().size()];
+    private ListFavorite() {
+        favorite = new boolean[20];
     }
 
-    public static synchronized FavoriteList getInstance() {
+    public static synchronized ListFavorite getInstance() {
         if (instance == null) {
-            instance = new FavoriteList();
+            instance = new ListFavorite();
         }
         return instance;
-    }
-
-    public void setFavorite(int position, boolean isFavorite) {
-
-        favorite[position] = isFavorite;
     }
 
     @Override

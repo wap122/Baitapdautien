@@ -26,7 +26,6 @@ import film.com.viwafo.example.Adapter.PagerAdapter;
 import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Fragment.ListFilmFragment;
 import film.com.viwafo.example.Fragment.SettingFragment;
-import film.com.viwafo.example.Model.Entity.FavoriteList;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Model.ParseData;
 import film.com.viwafo.example.R;
@@ -34,6 +33,7 @@ import film.com.viwafo.example.Util.UtilPermissions;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
+import static android.Manifest.permission.WAKE_LOCK;
 
 /**
  * Created by macintoshhd on 7/23/17.
@@ -89,7 +89,6 @@ public class MainActivity extends BaseActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
-        FavoriteList.getInstance();
         movieSqlite.onUpgrade(movieSqlite.getWritableDatabase(), 1, 2);
         bookmarkFimlFragment = new BookmarkFimlFragment();
         listFilmFragment = new ListFilmFragment(bookmarkFimlFragment);
@@ -98,7 +97,7 @@ public class MainActivity extends BaseActivity {
     }
 
     private void askForPermission() {
-        String[] PERMISSION = {INTERNET, ACCESS_NETWORK_STATE};
+        String[] PERMISSION = {INTERNET, ACCESS_NETWORK_STATE, WAKE_LOCK};
         if (!UtilPermissions.hasPermissions(this, PERMISSION)) {
             ActivityCompat.requestPermissions(this, PERMISSION, REQUEST_PERMISSIONS);
         }
@@ -180,7 +179,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+
+        if (listFilmFragment.allowBackPressed()) {
+            super.onBackPressed();
+        }
         //Handle button back
     }
 

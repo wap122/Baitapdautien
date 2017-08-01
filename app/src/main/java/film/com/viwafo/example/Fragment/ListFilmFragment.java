@@ -2,13 +2,16 @@ package film.com.viwafo.example.Fragment;
 
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapterList;
 import film.com.viwafo.example.Listener.OnDatabaseCreated;
 import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.FavoriteList;
+import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
+import film.com.viwafo.example.Model.Entity.ListFavorite;
+import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 
 /**
@@ -20,6 +23,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
     private CustomAdapterList customAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private OnFavotiteClick listenner;
+    private DetailFragment detailFragment;
 
     public ListFilmFragment(OnFavotiteClick listenner) {
         super();
@@ -47,6 +51,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                ListFavorite.getInstance().favorite = new boolean[20];
                 MainActivity.parseData.getDataFormApi();
             }
         });
@@ -55,16 +60,21 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
     }
 
     @Override
     protected void mapData() {
-    }
-
-    private void fetchTimelineAsync(int page) {
-
-
+        lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                parent.getItemAtPosition(position);
+                Movie movie = ListCurrentFilm.getInstance().get(position);
+                detailFragment = new DetailFragment(movie, listenner);
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.fl_container, detailFragment).addToBackStack(null).commit();
+                lvMovies.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     public void changeListview() {
@@ -80,7 +90,21 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
 
     @Override
     public void onEvent() {
-        MainActivity.tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
+        MainActivity.tvFavoriteNum.setText(String.valueOf(ListFavorite.getInstance().size()));
         customAdapter.notifyDataSetChanged();
+        if (detailFragment != null) {
+            detailFragment.onFavoriteClick();
+        }
+    }
+
+    public boolean allowBackPressed() {
+        if (detailFragment == null) {
+            return true;
+        }
+        getChildFragmentManager().beginTransaction().remove(detailFragment).commit();
+        detailFragment = null;
+        customAdapter.notifyDataSetChanged();
+        lvMovies.setVisibility(View.VISIBLE);
+        return false;
     }
 }

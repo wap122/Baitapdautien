@@ -6,7 +6,7 @@ import android.widget.ListView;
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapterBookMark;
 import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.FavoriteList;
+import film.com.viwafo.example.Model.Entity.ListFavorite;
 import film.com.viwafo.example.R;
 
 /**
@@ -45,7 +45,7 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavotiteClic
     @Override
     public void onEvent() {
         customAdapter.notifyDataSetChanged();
-        MainActivity.tvFavoriteNum.setText(String.valueOf(FavoriteList.getInstance().size()));
+        MainActivity.tvFavoriteNum.setText(String.valueOf(ListFavorite.getInstance().size()));
     }
 
     public void setListenner(OnFavotiteClick listenner) {
