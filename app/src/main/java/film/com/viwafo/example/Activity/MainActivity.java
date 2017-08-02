@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
 
-        if (listFilmFragment.allowBackPressed()) {
+        if ((listFilmFragment.allowBackPressed()) && (bookmarkFimlFragment.allowBackPressed())) {
             super.onBackPressed();
         }
         //Handle button back

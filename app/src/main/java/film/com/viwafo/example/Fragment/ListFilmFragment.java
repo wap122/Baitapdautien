@@ -67,7 +67,6 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
         lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                parent.getItemAtPosition(position);
                 Movie movie = ListCurrentFilm.getInstance().get(position);
                 detailFragment = new DetailFragment(movie, listenner);
                 getChildFragmentManager().beginTransaction()
