@@ -67,6 +67,10 @@ public class DetailFragment extends BaseFragment {
                 } else {
                     listFavorite.remove(movieData);
                     listenner.onEvent();
+                    if (getParentFragment() instanceof BookmarkFimlFragment) {
+                        BookmarkFimlFragment b = (BookmarkFimlFragment) getParentFragment();
+                        b.allowBackPressed();
+                    }
                     imgFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
             }
@@ -89,7 +93,7 @@ public class DetailFragment extends BaseFragment {
                 PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, 0);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTimeInMillis(System.currentTimeMillis());
-                calendar.set(year, month, dayOfMonth, 12, 0);
+                calendar.set(year, month, dayOfMonth);
                 alarmMgr.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 0, alarmIntent);
             }
         }, now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DATE));

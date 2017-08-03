@@ -24,14 +24,12 @@ public class CustomAdapterBookMark extends BaseAdapter {
 
     private Context context;
     private List<Movie> listMovie = new ArrayList<>();
-    private ListFavorite favoriteList;
     private OnFavotiteClick listenner;
 
     public CustomAdapterBookMark(Context context, OnFavotiteClick listenner) {
         super();
         this.context = context;
         this.listMovie = ListFavorite.getInstance();
-        favoriteList = ListFavorite.getInstance();
         this.listenner = listenner;
     }
 
@@ -42,7 +40,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return listMovie.get(position);
     }
 
     @Override
@@ -82,7 +80,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
         viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                favoriteList.remove(movie);
+                listMovie.remove(movie);
                 listenner.onEvent();
                 notifyDataSetChanged();
             }

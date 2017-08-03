@@ -9,7 +9,6 @@ import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapterList;
 import film.com.viwafo.example.Listener.OnDatabaseCreated;
 import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
 import film.com.viwafo.example.Model.Entity.ListFavorite;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
@@ -47,6 +46,10 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
     protected void mapView(View view) {
         lvMovies = (ListView) view.findViewById(R.id.lv_movies);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeContainer);
+    }
+
+    @Override
+    protected void mapData() {
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -60,14 +63,11 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-    }
 
-    @Override
-    protected void mapData() {
         lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie movie = ListCurrentFilm.getInstance().get(position);
+                Movie movie = (Movie) parent.getItemAtPosition(position);
                 detailFragment = new DetailFragment(movie, listenner);
                 getChildFragmentManager().beginTransaction()
                         .replace(R.id.fl_container, detailFragment).addToBackStack(null).commit();

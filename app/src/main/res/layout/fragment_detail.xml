@@ -99,5 +99,6 @@
         android:layout_below="@+id/img_poster"
         android:layout_toLeftOf="@+id/tv_rating"
         android:layout_toStartOf="@+id/tv_rating"
-        android:text="Reminder" />
+        android:text="Reminder"
+        android:textSize="14sp" />
 </RelativeLayout>

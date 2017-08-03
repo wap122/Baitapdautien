@@ -51,7 +51,7 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return listMovie.get(position);
     }
 
     @Override

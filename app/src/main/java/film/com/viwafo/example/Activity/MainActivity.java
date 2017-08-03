@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import film.com.viwafo.example.Adapter.PagerAdapter;
+import film.com.viwafo.example.Fragment.AboutFragment;
 import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
 import film.com.viwafo.example.Fragment.ListFilmFragment;
 import film.com.viwafo.example.Fragment.SettingFragment;
@@ -158,8 +159,8 @@ public class MainActivity extends BaseActivity {
         PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), this);
         pagerAdapter.addFrag(listFilmFragment, "Tab1");
         pagerAdapter.addFrag(bookmarkFimlFragment, "Tab2");
-        pagerAdapter.addFrag(new SettingFragment(), "Tab3");
-        pagerAdapter.addFrag(new SettingFragment(), "Tab4");
+        pagerAdapter.addFrag(new SettingFragment(listFilmFragment), "Tab3");
+        pagerAdapter.addFrag(new AboutFragment(), "Tab4");
         viewPager.setAdapter(pagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -179,11 +180,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-
-        if ((listFilmFragment.allowBackPressed()) && (bookmarkFimlFragment.allowBackPressed())) {
+        Boolean b1 = listFilmFragment.allowBackPressed();
+        Boolean b2 = bookmarkFimlFragment.allowBackPressed();
+        if (b1 && b2) {
             super.onBackPressed();
         }
-        //Handle button back
     }
 
     public void showPopup(View view) {
