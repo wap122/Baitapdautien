@@ -5,19 +5,23 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Calendar;
+import com.squareup.picasso.Picasso;
 
-import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.ListFavorite;
+import java.util.Calendar;
+import java.util.List;
+
+import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 import film.com.viwafo.example.Receiver.AlarmReceiver;
+import film.com.viwafo.example.Util.Util;
 
 public class DetailFragment extends BaseFragment {
 
@@ -25,13 +29,15 @@ public class DetailFragment extends BaseFragment {
     private ImageView imgFavorite, imgPoster;
     private TextView tvRelease, tvRating, tvOverview;
     private Button btnReminder;
-    private ListFavorite listFavorite;
-    private OnFavotiteClick listenner;
+    private OnFavoriteClick listenner;
+    private List<Movie> listFavorite;
+    private List<Drawable> listPosterImage;
+    private Drawable poster;
 
-    public DetailFragment(Movie movie, OnFavotiteClick listenner) {
+    public DetailFragment(Movie movie, Drawable poster) {
         super();
         this.movieData = movie;
-        this.listenner = listenner;
+        this.poster = poster;
     }
 
     @Override
@@ -41,46 +47,12 @@ public class DetailFragment extends BaseFragment {
 
     @Override
     protected void mapView(View view) {
-        listFavorite = ListFavorite.getInstance();
         imgFavorite = (ImageView) view.findViewById(R.id.img_favorite);
         imgPoster = (ImageView) view.findViewById(R.id.img_poster);
         tvRelease = (TextView) view.findViewById(R.id.tv_releaseday);
         tvRating = (TextView) view.findViewById(R.id.tv_rating);
         tvOverview = (TextView) view.findViewById(R.id.tv_overview);
         btnReminder = (Button) view.findViewById(R.id.btn_reminder);
-
-        if (listFavorite.isFavorite(movieData.getId())) {
-            imgFavorite.setImageResource(R.drawable.ic_start_selected);
-        } else {
-            imgFavorite.setImageResource(R.drawable.ic_star_border_black);
-        }
-        imgFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (imgFavorite.getDrawable().getConstantState().equals
-                        (getContext().getResources().getDrawable(
-                                R.drawable.ic_star_border_black).getConstantState())) {
-
-                    imgFavorite.setImageResource(R.drawable.ic_start_selected);
-                    listFavorite.add(movieData);
-                    listenner.onEvent();
-                } else {
-                    listFavorite.remove(movieData);
-                    listenner.onEvent();
-                    if (getParentFragment() instanceof BookmarkFimlFragment) {
-                        BookmarkFimlFragment b = (BookmarkFimlFragment) getParentFragment();
-                        b.allowBackPressed();
-                    }
-                    imgFavorite.setImageResource(R.drawable.ic_star_border_black);
-                }
-            }
-        });
-        btnReminder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-            }
-        });
     }
 
     private void showDialog() {
@@ -106,10 +78,69 @@ public class DetailFragment extends BaseFragment {
 
     @Override
     protected void mapData() {
-        imgPoster.setImageDrawable(movieData.getDrawable());
+        BookmarkFimlFragment b = (BookmarkFimlFragment) getParentFragment()
+                .getFragmentManager().getFragments().get(1);
+        this.listenner = b;
+        listFavorite = b.getListFavorite();
+        listPosterImage = b.getListPosterImange();
+
+        if (!Util.isNull(poster)) {
+            imgPoster.setImageDrawable(poster);
+        } else {
+            Picasso.with(context)
+                    .load("http://image.tmdb.org/t/p/w500" + movieData.getPosterUrl())
+                    .placeholder(R.drawable.ic_holder).into(imgPoster);
+        }
+
         tvRelease.setText(movieData.getReleaseDate());
         tvRating.setText(movieData.getVoteAverage() + "/10");
         tvOverview.setText(movieData.getOverview());
+        if (takePosition(movieData) != -1) {
+            imgFavorite.setImageResource(R.drawable.ic_start_selected);
+        } else {
+            imgFavorite.setImageResource(R.drawable.ic_star_border_black);
+        }
+        imgFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imgFavorite.getDrawable().getConstantState().equals
+                        (getContext().getResources().getDrawable(
+                                R.drawable.ic_star_border_black).getConstantState())) {
+                    imgFavorite.setImageResource(R.drawable.ic_start_selected);
+                    listPosterImage.add(imgPoster.getDrawable());
+                    listFavorite.add(movieData);
+                    listenner.OnFavoriteClick();
+                } else {
+                    listPosterImage.remove(imgPoster.getDrawable());
+                    listFavorite.remove(takePosition(movieData));
+                    listenner.OnFavoriteClick();
+                    imgFavorite.setImageResource(R.drawable.ic_star_border_black);
+                }
+            }
+        });
+        btnReminder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
 
+    }
+
+    private int takePosition(Movie movie) {
+        for (Movie m : listFavorite) {
+            if (m.getTitle().contentEquals(movie.getTitle())) {
+                return listFavorite.indexOf(m);
+            }
+        }
+        return -1;
+    }
+
+    public void onItemListviewClick(Movie movieData, Drawable poster) {
+        if (movieData.getTitle().contentEquals(this.movieData.getTitle())) {
+            return;
+        }
+        getParentFragment().getChildFragmentManager().beginTransaction()
+                .replace(R.id.fl_container, new DetailFragment(movieData, poster)).addToBackStack(null).commit();
     }
 }

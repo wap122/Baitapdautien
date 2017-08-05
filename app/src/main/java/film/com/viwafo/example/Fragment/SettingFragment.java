@@ -11,8 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import film.com.viwafo.example.Listener.OnDatabaseCreated;
-import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
-import film.com.viwafo.example.Model.Entity.ListFavorite;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.R;
 
@@ -23,6 +21,7 @@ public class SettingFragment extends BaseFragment {
 
     private TextView tvCategory;
     private OnDatabaseCreated listenner;
+    private Dialog dlCategory;
 
     public SettingFragment(OnDatabaseCreated listenner) {
         this.listenner = listenner;
@@ -36,23 +35,10 @@ public class SettingFragment extends BaseFragment {
     @Override
     protected void mapView(View view) {
         tvCategory = (TextView) view.findViewById(R.id.tv_category);
-    }
-
-    @Override
-    protected void mapData() {
-        tvCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCategoryDialog();
-            }
-        });
-    }
-
-    private void showCategoryDialog() {
-        final Dialog dialog = new Dialog(getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_category);
-        RadioGroup radioGroup = (RadioGroup) dialog.findViewById(R.id.rg);
+        dlCategory = new Dialog(getContext());
+        dlCategory.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dlCategory.setContentView(R.layout.dialog_category);
+        RadioGroup radioGroup = (RadioGroup) dlCategory.findViewById(R.id.rg);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
@@ -68,15 +54,22 @@ public class SettingFragment extends BaseFragment {
                     }
                     case 3: {
                         Toast.makeText(getContext(), "Ahihi đồ ngốc", Toast.LENGTH_SHORT).show();
+                        break;
                     }
                 }
-                dialog.dismiss();
-                ListCurrentFilm.getInstance().clear();
-                ListCurrentFilm.getInstance().addAll(MovieSqlite.getInstance(null).sortWithRank(rank));
-                ListFavorite.getInstance().favorite = new boolean[20];
-                listenner.OnCreated();
+                listenner.OnCreated(MovieSqlite.getInstance(null).sortWithRank(rank));
+                dlCategory.dismiss();
             }
         });
-        dialog.show();
+    }
+
+    @Override
+    protected void mapData() {
+        tvCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dlCategory.show();
+            }
+        });
     }
 }

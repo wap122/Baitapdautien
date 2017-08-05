@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import film.com.viwafo.example.Listener.OnDatabaseCreated;
-import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Util.IOUtil;
@@ -25,22 +24,17 @@ import film.com.viwafo.example.Util.IOUtil;
 /**
  * Created by macintoshhd on 7/23/17.
  */
-public class AsyncApi extends AsyncTask<String, Void, Void> {
+public class AsyncApi extends AsyncTask<String, Void, List> {
     private OnDatabaseCreated listenner;
-    private List<Movie> list;
 
     public AsyncApi(OnDatabaseCreated listenner) {
         this.listenner = listenner;
-        list = new ArrayList<>();
     }
 
     @Override
-    protected Void doInBackground(String... params) {
-        for (String urlApi : params) {
-            String jsonStr = getStringFromURL(urlApi);
-            createDatabase(jsonStr);
-        }
-        return null;
+    protected List doInBackground(String... params) {
+        String jsonStr = getStringFromURL(params[0]);
+        return createDatabase(jsonStr);
     }
 
     private String getStringFromURL(String urlApi) {
@@ -77,8 +71,9 @@ public class AsyncApi extends AsyncTask<String, Void, Void> {
         return null;
     }
 
-    private void createDatabase(String jsonStr) {
+    private List createDatabase(String jsonStr) {
         try {
+            List<Movie> list = new ArrayList<>();
             JSONObject jsonRootObject = new JSONObject(jsonStr);
             JSONArray jsonArray = jsonRootObject.optJSONArray("results");
             for (int i = 0; i < jsonArray.length(); i++) {
@@ -90,23 +85,20 @@ public class AsyncApi extends AsyncTask<String, Void, Void> {
                 movie.setVoteAverage(jsonObject.optString("vote_average"));
                 movie.setOverview(jsonObject.optString("overview"));
                 movie.setIsAdult(jsonObject.optString("adult"));
-
                 list.add(movie);
                 MovieSqlite.getInstance(null).addMovie(movie);
             }
-//            ListCurrentFilm.getInstance().addAll(0, MovieSqlite.getInstance(null).getAllMovies());
-//            parseData.mainActivity.changeFilmFragment();
+            return list;
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        ListCurrentFilm.getInstance().clear();
-        ListCurrentFilm.getInstance().addAll(list);
-        listenner.OnCreated();
+    protected void onPostExecute(List list) {
+        super.onPostExecute(list);
+        listenner.OnCreated(list);
 //        parseData.mainActivity.changeFilmFragment();
     }
 

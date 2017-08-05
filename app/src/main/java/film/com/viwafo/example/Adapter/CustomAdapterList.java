@@ -1,6 +1,7 @@
 package film.com.viwafo.example.Adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +11,13 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.ListCurrentFilm;
-import film.com.viwafo.example.Model.Entity.ListFavorite;
+import film.com.viwafo.example.Fragment.BookmarkFimlFragment;
+import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 
@@ -32,15 +31,20 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
     private ArrayList<Movie> arrayListFilter;
     private Context context;
     private ValueFilter valueFilter;
-    private ListFavorite favoriteList;
-    private OnFavotiteClick listenner;
+    private List<Movie> listFavorite;
+    private OnFavoriteClick listenner;
+    private List<Drawable> listPosterImage;
 
-    public CustomAdapterList(Context context, OnFavotiteClick listenner) {
+    public CustomAdapterList(Context context, OnFavoriteClick listenner) {
         super();
         this.context = context;
-        listMovie = ListCurrentFilm.getInstance();
-        arrayListFilter = ListCurrentFilm.getInstance();
-        favoriteList = ListFavorite.getInstance();
+        listMovie = new ArrayList<>();
+        arrayListFilter = new ArrayList<>();
+        if (listenner instanceof BookmarkFimlFragment) {
+            BookmarkFimlFragment bookmarkFimlFragment = (BookmarkFimlFragment) listenner;
+            listFavorite = bookmarkFimlFragment.getListFavorite();
+            listPosterImage = bookmarkFimlFragment.getListPosterImange();
+        }
         this.listenner = listenner;
     }
 
@@ -61,6 +65,7 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+
         final ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.custom_row_listview, null);
@@ -70,7 +75,7 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
             viewHolder.tvReleaseDate = (TextView) convertView.findViewById(R.id.tv_edit_releaseday);
             viewHolder.tvVoteAverage = (TextView) convertView.findViewById(R.id.tv_edit_vote);
             viewHolder.tvOverview = (TextView) convertView.findViewById(R.id.tv_overview);
-            viewHolder.imgIsFavorite = (ImageView) convertView.findViewById(R.id.img_favorite);
+            viewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.img_favorite);
             viewHolder.imgIsAdult = (ImageView) convertView.findViewById(R.id.img_isadult);
             convertView.setTag(viewHolder);
         } else {
@@ -81,51 +86,49 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
         viewHolder.tvTitle.setText(movie.getTitle());
         Picasso.with(context)
                 .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
-                .placeholder(R.drawable.ic_holder)
-                .into(viewHolder.imgPoster, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        movie.setDrawable(viewHolder.imgPoster.getDrawable());
-                    }
-
-                    @Override
-                    public void onError() {
-                    }
-                });
-
+                .placeholder(R.drawable.ic_holder).into(viewHolder.imgPoster);
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
         viewHolder.tvOverview.setText(movie.getOverview());
-        if (favoriteList.isFavorite(position)) {
-            viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
+        if (takePosition(movie) != -1) {
+            viewHolder.imgFavorite.setImageResource(R.drawable.ic_start_selected);
         } else {
-            viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
+            viewHolder.imgFavorite.setImageResource(R.drawable.ic_star_border_black);
         }
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
         movie.setId(position);
 
-        viewHolder.imgIsFavorite.setOnClickListener(new View.OnClickListener() {
+        viewHolder.imgFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewHolder.imgIsFavorite.getDrawable().getConstantState().equals
+                if (viewHolder.imgFavorite.getDrawable().getConstantState().equals
                         (context.getResources().getDrawable(
                                 R.drawable.ic_star_border_black).getConstantState())) {
-
-                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);
-                    favoriteList.add(movie);
-                    listenner.onEvent();
-
+                    viewHolder.imgFavorite.setImageResource(R.drawable.ic_start_selected);
+                    listPosterImage.add(viewHolder.imgPoster.getDrawable());
+                    listFavorite.add(movie);
+                    listenner.OnFavoriteClick();
                 } else {
-                    favoriteList.remove(movie);
-                    listenner.onEvent();
-                    viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_star_border_black);
+                    listPosterImage.remove(viewHolder.imgPoster.getDrawable());
+                    listFavorite.remove(takePosition(movie));
+                    listenner.OnFavoriteClick();
+                    viewHolder.imgFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
             }
         });
 
         return convertView;
+    }
+
+    private int takePosition(Movie movie) {
+        for (Movie m : listFavorite) {
+            if (m.getTitle().contentEquals(movie.getTitle())) {
+                return listFavorite.indexOf(m);
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -136,9 +139,16 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
         return valueFilter;
     }
 
+    public void addAll(List list) {
+        listMovie.clear();
+        listMovie.addAll(list);
+        arrayListFilter = (ArrayList<Movie>) listMovie;
+        notifyDataSetChanged();
+    }
+
     private static class ViewHolder {
         private TextView tvTitle, tvReleaseDate, tvVoteAverage, tvOverview;
-        private ImageView imgPoster, imgIsAdult, imgIsFavorite;
+        private ImageView imgPoster, imgIsAdult, imgFavorite;
     }
 
     private class ValueFilter extends Filter {

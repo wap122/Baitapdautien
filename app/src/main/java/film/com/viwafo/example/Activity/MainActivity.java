@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -43,8 +44,8 @@ import static android.Manifest.permission.WAKE_LOCK;
 public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_PERMISSIONS = 1;
-    public static TextView tvFavoriteNum;
-    public static ParseData parseData;
+    private TextView tvFavoriteNum;
+    private ParseData parseData;
     private TabLayout tabLayout;
     private BookmarkFimlFragment bookmarkFimlFragment;
     private ListFilmFragment listFilmFragment;
@@ -91,9 +92,8 @@ public class MainActivity extends BaseActivity {
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         MovieSqlite movieSqlite = MovieSqlite.getInstance(this);
         movieSqlite.onUpgrade(movieSqlite.getWritableDatabase(), 1, 2);
-        bookmarkFimlFragment = new BookmarkFimlFragment();
-        listFilmFragment = new ListFilmFragment(bookmarkFimlFragment);
-        bookmarkFimlFragment.setListenner(listFilmFragment);
+        listFilmFragment = new ListFilmFragment();
+        bookmarkFimlFragment = new BookmarkFimlFragment(this, listFilmFragment);
         searchView = (SearchView) findViewById(R.id.search_view);
     }
 
@@ -109,7 +109,7 @@ public class MainActivity extends BaseActivity {
             return;
         }
         parseData = new ParseData(listFilmFragment);
-        parseData.getDataFormApi();
+        parseData.getDataFormApi(ParseData.urlApiMovie);
     }
 
     public boolean checkConnection() {
@@ -180,11 +180,16 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        Boolean b1 = listFilmFragment.allowBackPressed();
-        Boolean b2 = bookmarkFimlFragment.allowBackPressed();
-        if (b1 && b2) {
+        FragmentManager f = listFilmFragment.getChildFragmentManager();
+        if (f.getBackStackEntryCount() == 0) {
             super.onBackPressed();
         }
+        f.popBackStack();
+        if (f.getBackStackEntryCount() == 1) {
+            listFilmFragment.getCustomAdapter().notifyDataSetChanged();
+            listFilmFragment.getLvMovies().setVisibility(View.VISIBLE);
+        }
+
     }
 
     public void showPopup(View view) {
@@ -213,4 +218,11 @@ public class MainActivity extends BaseActivity {
         Toast.makeText(this, "Đã dc cấp quyền", Toast.LENGTH_SHORT).show();
     }
 
+    public void changeFavoriteNumber(String result) {
+        tvFavoriteNum.setText(result);
+    }
+
+    public ParseData getParseData() {
+        return parseData;
+    }
 }

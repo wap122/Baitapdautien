@@ -1,28 +1,45 @@
 package film.com.viwafo.example.Fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.google.gson.Gson;
+
+import java.util.List;
+
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapterBookMark;
-import film.com.viwafo.example.Listener.OnFavotiteClick;
-import film.com.viwafo.example.Model.Entity.ListFavorite;
+import film.com.viwafo.example.Listener.OnFavoriteClick;
+import film.com.viwafo.example.Listener.OnItemListview;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 
 /**
  * Created by macintoshhd on 7/23/17.
  */
-public class BookmarkFimlFragment extends BaseFragment implements OnFavotiteClick {
+public class BookmarkFimlFragment extends BaseFragment implements OnFavoriteClick {
+
+    private static final String SHARED_PREFERENCES_NAME = "Data";
 
     private ListView lvBookmark;
     private CustomAdapterBookMark customAdapter;
-    private OnFavotiteClick listenner;
-    private DetailFragment detailFragment;
+    private OnFavoriteClick listenner;
+    private SharedPreferences sharedPreferences;
+    private MainActivity main;
 
-    public BookmarkFimlFragment() {
+    public BookmarkFimlFragment(Context context, OnFavoriteClick listenner) {
         super();
+        sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        this.context = context;
+        this.listenner = listenner;
+        if (context instanceof MainActivity) {
+            main = (MainActivity) context;
+        }
+        customAdapter = new CustomAdapterBookMark(context, listenner, sharedPreferences);
     }
 
     @Override
@@ -37,41 +54,53 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavotiteClic
 
     @Override
     protected void mapData() {
-        changeAdapter();
+        main.changeFavoriteNumber(String.valueOf(customAdapter.getCount()));
+        lvBookmark.setAdapter(customAdapter);
         lvBookmark.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie movie = ListFavorite.getInstance().get(position);
-                detailFragment = new DetailFragment(movie, listenner);
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.fl_containerbookmark, detailFragment).addToBackStack(null).commit();
-                lvBookmark.setVisibility(View.INVISIBLE);
+                OnItemListview l = (OnItemListview) getFragmentManager().getFragments().get(0);
+                if (customAdapter.getListPosterImange().size() != customAdapter.getCount()) {
+                    l.OnItemListviewClick((Movie) parent.getItemAtPosition(position),
+                            null);
+                } else {
+                    l.OnItemListviewClick((Movie) parent.getItemAtPosition(position),
+                            (Drawable) customAdapter.getListPosterImange().get(position));
+                }
             }
         });
     }
 
-    public void changeAdapter() {
-        customAdapter = new CustomAdapterBookMark(getContext(), listenner);
-        lvBookmark.setAdapter(customAdapter);
+    @Override
+    public void OnFavoriteClick() {
+        customAdapter.notifyDataSetChanged();
+    }
+
+    public boolean onBackPress() {
+//        if (detailFragment == null) {
+//            return true;
+//        }
+//        getChildFragmentManager().beginTransaction().remove(detailFragment).commit();
+//        detailFragment = null;
+//        customAdapter.notifyDataSetChanged();
+//        lvBookmark.setVisibility(View.VISIBLE);
+        return false;
     }
 
     @Override
-    public void onEvent() {
-        customAdapter.notifyDataSetChanged();
-        MainActivity.tvFavoriteNum.setText(String.valueOf(ListFavorite.getInstance().size()));
-    }
-    public void setListenner(OnFavotiteClick listenner) {
-        this.listenner = listenner;
+    public void onStop() {
+        super.onStop();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String json = new Gson().toJson(customAdapter.getListFavorite());
+        editor.putString("ListFavorite", json);
+        editor.apply();
     }
 
-    public boolean allowBackPressed() {
-        if (detailFragment == null) {
-            return true;
-        }
-        getChildFragmentManager().beginTransaction().remove(detailFragment).commit();
-        detailFragment = null;
-        customAdapter.notifyDataSetChanged();
-        lvBookmark.setVisibility(View.VISIBLE);
-        return false;
+    public List getListFavorite() {
+        return customAdapter.getListFavorite();
+    }
+
+    public List getListPosterImange() {
+        return customAdapter.getListPosterImange();
     }
 }

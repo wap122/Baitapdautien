@@ -5,7 +5,7 @@ package film.com.viwafo.example.Util;
  */
 
 public class Util {
-    public static boolean isSelected() {
-        return true;
+    public static boolean isNull(Object object) {
+        return object == null;
     }
 }
