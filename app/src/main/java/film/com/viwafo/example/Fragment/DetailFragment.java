@@ -143,4 +143,8 @@ public class DetailFragment extends BaseFragment {
         getParentFragment().getChildFragmentManager().beginTransaction()
                 .replace(R.id.fl_container, new DetailFragment(movieData, poster)).addToBackStack(null).commit();
     }
+
+    public String getTitle() {
+        return movieData.getTitle();
+    }
 }

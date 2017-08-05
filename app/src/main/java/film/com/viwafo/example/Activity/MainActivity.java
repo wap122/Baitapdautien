@@ -51,6 +51,7 @@ public class MainActivity extends BaseActivity {
     private ListFilmFragment listFilmFragment;
     private SearchView searchView;
     private ViewPager viewPager;
+    private ImageView imgGrid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,10 +64,10 @@ public class MainActivity extends BaseActivity {
         customViewpagerTabs();
         customViewpagerTab2();
         getDatatFromServer();
-        setupSearchView();
+        setupView();
     }
 
-    private void setupSearchView() {
+    private void setupView() {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -85,7 +86,23 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+
+        imgGrid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imgGrid.getDrawable().getConstantState().equals
+                        (getResources().getDrawable(
+                                R.drawable.ic_grid_on_white).getConstantState())) {
+                    imgGrid.setImageResource(R.drawable.ic_list_white);
+                    listFilmFragment.changeListViewToGrid();
+                } else {
+                    imgGrid.setImageResource(R.drawable.ic_grid_on_white);
+                    listFilmFragment.changeListViewtoList();
+                }
+            }
+        });
     }
+
 
     private void createView() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
@@ -95,6 +112,7 @@ public class MainActivity extends BaseActivity {
         listFilmFragment = new ListFilmFragment();
         bookmarkFimlFragment = new BookmarkFimlFragment(this, listFilmFragment);
         searchView = (SearchView) findViewById(R.id.search_view);
+        imgGrid = (ImageView) findViewById(R.id.img_grid);
     }
 
     private void askForPermission() {
@@ -184,10 +202,14 @@ public class MainActivity extends BaseActivity {
         if (f.getBackStackEntryCount() == 0) {
             super.onBackPressed();
         }
-        f.popBackStack();
+
         if (f.getBackStackEntryCount() == 1) {
+            f.popBackStack();
             listFilmFragment.getCustomAdapter().notifyDataSetChanged();
             listFilmFragment.getLvMovies().setVisibility(View.VISIBLE);
+            listFilmFragment.setDetailFragment();
+        } else {
+            f.popBackStack();
         }
 
     }

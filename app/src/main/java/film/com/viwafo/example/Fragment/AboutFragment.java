@@ -1,30 +1,29 @@
 package film.com.viwafo.example.Fragment;
 
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import film.com.viwafo.example.R;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AboutFragment extends Fragment {
-
-
-    public AboutFragment() {
-        // Required empty public constructor
-    }
+public class AboutFragment extends BaseFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_about, container, false);
+    protected int getResIdLayout() {
+        return R.layout.fragment_about;
     }
 
+    @Override
+    protected void mapView(View view) {
+
+    }
+
+    @Override
+    protected void mapData() {
+
+    }
 }

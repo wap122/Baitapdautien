@@ -79,6 +79,7 @@ public class AsyncApi extends AsyncTask<String, Void, List> {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Movie movie = new Movie();
+                movie.setId(jsonObject.getInt("id"));
                 movie.setTitle(jsonObject.optString("title"));
                 movie.setPosterUrl(jsonObject.optString("poster_path"));
                 movie.setReleaseDate(jsonObject.optString("release_date"));

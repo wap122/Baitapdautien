@@ -58,10 +58,12 @@
                     android:queryHint="Search Movie" />
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/img_grid"
                     android:layout_width="@dimen/size_vertical"
                     android:layout_height="@dimen/size_vertical"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/search_view"
+                    android:src="@drawable/ic_grid_on_white" />
             </RelativeLayout>
 
         </android.support.v7.widget.Toolbar>

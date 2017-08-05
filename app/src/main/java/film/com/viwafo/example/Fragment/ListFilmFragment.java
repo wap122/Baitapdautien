@@ -12,6 +12,7 @@ import java.util.List;
 
 import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Adapter.CustomAdapterList;
+import film.com.viwafo.example.Adapter.TwoItemAdapter;
 import film.com.viwafo.example.Listener.OnDatabaseCreated;
 import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Listener.OnItemListview;
@@ -26,9 +27,10 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
 
     private ListView lvMovies;
     private CustomAdapterList customAdapter;
+    private TwoItemAdapter twoItemAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private OnFavoriteClick listenner;
     private DetailFragment detailFragment;
+    private OnFavoriteClick listenner;
     private MainActivity main;
 
     public ListFilmFragment() {
@@ -79,27 +81,17 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
                 android.R.color.holo_red_light);
     }
 
-    private void createListview() {
+    public void createListview() {
         listenner = (OnFavoriteClick) getFragmentManager().getFragments().get(1);
+        twoItemAdapter = new TwoItemAdapter(getContext(), this);
         customAdapter = new CustomAdapterList(getContext(), listenner);
-        lvMovies.setAdapter(customAdapter);
-        lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Movie movie = (Movie) parent.getItemAtPosition(position);
-                RelativeLayout rl = (RelativeLayout) view;
-                ImageView img = (ImageView) rl.getChildAt(1);
-                detailFragment = new DetailFragment(movie, img.getDrawable());
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.fl_container, detailFragment).addToBackStack(null).commit();
-                lvMovies.setVisibility(View.INVISIBLE);
-            }
-        });
+        changeListViewtoList();
     }
 
     @Override
     public void OnCreated(List list) {
         customAdapter.addAll(list);
+        twoItemAdapter.addAll(list);
         swipeRefreshLayout.setRefreshing(false);
     }
 
@@ -114,7 +106,37 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
     @Override
     public void OnItemListviewClick(Movie movieData, Drawable poster) {
         lvMovies.setVisibility(View.INVISIBLE);
-        detailFragment.onItemListviewClick(movieData, poster);
+        if (getChildFragmentManager().getBackStackEntryCount() == 1) {
+            if (detailFragment.getTitle().contentEquals(movieData.getTitle())) {
+                return;
+            }
+        }
+        detailFragment = new DetailFragment(movieData, poster);
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.fl_container, detailFragment).addToBackStack(null).commit();
 
+    }
+
+    public void changeListViewToGrid() {
+        lvMovies.setAdapter(twoItemAdapter);
+        lvMovies.setOnItemClickListener(null);
+    }
+
+    public void setDetailFragment() {
+        detailFragment = null;
+    }
+
+    public void changeListViewtoList() {
+        lvMovies.setAdapter(customAdapter);
+        lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                lvMovies.setVisibility(View.INVISIBLE);
+                Movie movie = (Movie) parent.getItemAtPosition(position);
+                RelativeLayout rl = (RelativeLayout) view;
+                ImageView img = (ImageView) rl.getChildAt(1);
+                OnItemListviewClick(movie, img.getDrawable());
+            }
+        });
     }
 }

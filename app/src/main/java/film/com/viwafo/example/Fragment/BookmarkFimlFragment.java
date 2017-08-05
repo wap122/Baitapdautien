@@ -76,17 +76,6 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavoriteClic
         customAdapter.notifyDataSetChanged();
     }
 
-    public boolean onBackPress() {
-//        if (detailFragment == null) {
-//            return true;
-//        }
-//        getChildFragmentManager().beginTransaction().remove(detailFragment).commit();
-//        detailFragment = null;
-//        customAdapter.notifyDataSetChanged();
-//        lvBookmark.setVisibility(View.VISIBLE);
-        return false;
-    }
-
     @Override
     public void onStop() {
         super.onStop();

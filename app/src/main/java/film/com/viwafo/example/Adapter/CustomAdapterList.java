@@ -48,6 +48,10 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
         this.listenner = listenner;
     }
 
+    public List getListMovie() {
+        return listMovie;
+    }
+
     @Override
     public int getCount() {
         return listMovie.size();
@@ -98,7 +102,6 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
         if (Boolean.parseBoolean(movie.getIsAdult())) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
-        movie.setId(position);
 
         viewHolder.imgFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
