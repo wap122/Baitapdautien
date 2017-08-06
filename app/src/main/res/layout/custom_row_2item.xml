@@ -31,6 +31,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Ten phim 1"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold|italic" />
         </LinearLayout>
@@ -64,6 +65,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="Ten phim 1"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold|italic" />
 
