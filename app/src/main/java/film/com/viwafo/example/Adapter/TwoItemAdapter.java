@@ -72,7 +72,7 @@ public class TwoItemAdapter extends BaseAdapter {
         viewHolder.imgPoster1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listenner.OnItemListviewClick(movie1, viewHolder.imgPoster1.getDrawable());
+                listenner.onItemListviewClick(movie1, viewHolder.imgPoster1.getDrawable());
             }
         });
         viewHolder.tvTitle1.setText(movie1.getTitle());
@@ -87,7 +87,7 @@ public class TwoItemAdapter extends BaseAdapter {
         viewHolder.imgPoster2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listenner.OnItemListviewClick(movie2, viewHolder.imgPoster2.getDrawable());
+                listenner.onItemListviewClick(movie2, viewHolder.imgPoster2.getDrawable());
             }
         });
         return convertView;

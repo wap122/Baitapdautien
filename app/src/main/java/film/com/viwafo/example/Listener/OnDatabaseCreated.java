@@ -7,5 +7,5 @@ import java.util.List;
  */
 
 public interface OnDatabaseCreated {
-    void OnCreated(List list);
+    void onCreated(List list);
 }

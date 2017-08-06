@@ -12,7 +12,7 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import film.com.viwafo.example.Activity.MainActivity;
-import film.com.viwafo.example.Adapter.CustomAdapterBookMark;
+import film.com.viwafo.example.Adapter.FavoriteAdapter;
 import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Listener.OnItemListview;
 import film.com.viwafo.example.Model.Entity.Movie;
@@ -26,7 +26,7 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavoriteClic
     private static final String SHARED_PREFERENCES_NAME = "Data";
 
     private ListView lvBookmark;
-    private CustomAdapterBookMark customAdapter;
+    private FavoriteAdapter customAdapter;
     private OnFavoriteClick listenner;
     private SharedPreferences sharedPreferences;
     private MainActivity main;
@@ -39,12 +39,12 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavoriteClic
         if (context instanceof MainActivity) {
             main = (MainActivity) context;
         }
-        customAdapter = new CustomAdapterBookMark(context, listenner, sharedPreferences);
+        customAdapter = new FavoriteAdapter(context, listenner, sharedPreferences);
     }
 
     @Override
     protected int getResIdLayout() {
-        return R.layout.fragment_bookmark_film;
+        return R.layout.fragment_favorite;
     }
 
     @Override
@@ -61,10 +61,10 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavoriteClic
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 OnItemListview l = (OnItemListview) getFragmentManager().getFragments().get(0);
                 if (customAdapter.getListPosterImange().size() != customAdapter.getCount()) {
-                    l.OnItemListviewClick((Movie) parent.getItemAtPosition(position),
+                    l.onItemListviewClick((Movie) parent.getItemAtPosition(position),
                             null);
                 } else {
-                    l.OnItemListviewClick((Movie) parent.getItemAtPosition(position),
+                    l.onItemListviewClick((Movie) parent.getItemAtPosition(position),
                             (Drawable) customAdapter.getListPosterImange().get(position));
                 }
             }
@@ -72,7 +72,7 @@ public class BookmarkFimlFragment extends BaseFragment implements OnFavoriteClic
     }
 
     @Override
-    public void OnFavoriteClick() {
+    public void onFavoriteClick() {
         customAdapter.notifyDataSetChanged();
     }
 

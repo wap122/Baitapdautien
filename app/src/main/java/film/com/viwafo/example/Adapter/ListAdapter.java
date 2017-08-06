@@ -25,7 +25,7 @@ import film.com.viwafo.example.R;
  * Created by minhl on 26/07/2017.
  */
 
-public class CustomAdapterList extends BaseAdapter implements Filterable {
+public class ListAdapter extends BaseAdapter implements Filterable {
 
     private List<Movie> listMovie;
     private ArrayList<Movie> arrayListFilter;
@@ -35,7 +35,7 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
     private OnFavoriteClick listenner;
     private List<Drawable> listPosterImage;
 
-    public CustomAdapterList(Context context, OnFavoriteClick listenner) {
+    public ListAdapter(Context context, OnFavoriteClick listenner) {
         super();
         this.context = context;
         listMovie = new ArrayList<>();
@@ -112,11 +112,11 @@ public class CustomAdapterList extends BaseAdapter implements Filterable {
                     viewHolder.imgFavorite.setImageResource(R.drawable.ic_start_selected);
                     listPosterImage.add(viewHolder.imgPoster.getDrawable());
                     listFavorite.add(movie);
-                    listenner.OnFavoriteClick();
+                    listenner.onFavoriteClick();
                 } else {
                     listPosterImage.remove(viewHolder.imgPoster.getDrawable());
                     listFavorite.remove(takePosition(movie));
-                    listenner.OnFavoriteClick();
+                    listenner.onFavoriteClick();
                     viewHolder.imgFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
             }

@@ -5,5 +5,5 @@ package film.com.viwafo.example.Listener;
  */
 
 public interface OnFavoriteClick {
-    void OnFavoriteClick();
+    void onFavoriteClick();
 }

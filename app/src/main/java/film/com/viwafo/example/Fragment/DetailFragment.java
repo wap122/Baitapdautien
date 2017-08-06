@@ -6,6 +6,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -17,13 +19,16 @@ import com.squareup.picasso.Picasso;
 import java.util.Calendar;
 import java.util.List;
 
+import film.com.viwafo.example.Activity.MainActivity;
+import film.com.viwafo.example.Adapter.ActorAdapter;
+import film.com.viwafo.example.Listener.OnDatabaseCreated;
 import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 import film.com.viwafo.example.Receiver.AlarmReceiver;
 import film.com.viwafo.example.Util.Util;
 
-public class DetailFragment extends BaseFragment {
+public class DetailFragment extends BaseFragment implements OnDatabaseCreated {
 
     private Movie movieData;
     private ImageView imgFavorite, imgPoster;
@@ -33,6 +38,8 @@ public class DetailFragment extends BaseFragment {
     private List<Movie> listFavorite;
     private List<Drawable> listPosterImage;
     private Drawable poster;
+    private RecyclerView rvActor;
+    private ActorAdapter adapterActor;
 
     public DetailFragment(Movie movie, Drawable poster) {
         super();
@@ -53,6 +60,8 @@ public class DetailFragment extends BaseFragment {
         tvRating = (TextView) view.findViewById(R.id.tv_rating);
         tvOverview = (TextView) view.findViewById(R.id.tv_overview);
         btnReminder = (Button) view.findViewById(R.id.btn_reminder);
+        rvActor = (RecyclerView) view.findViewById(R.id.rv_actor_name);
+
     }
 
     private void showDialog() {
@@ -78,6 +87,8 @@ public class DetailFragment extends BaseFragment {
 
     @Override
     protected void mapData() {
+        getActivity().setTitle("DetailFragment");
+        setupRecycleView();
         BookmarkFimlFragment b = (BookmarkFimlFragment) getParentFragment()
                 .getFragmentManager().getFragments().get(1);
         this.listenner = b;
@@ -109,11 +120,11 @@ public class DetailFragment extends BaseFragment {
                     imgFavorite.setImageResource(R.drawable.ic_start_selected);
                     listPosterImage.add(imgPoster.getDrawable());
                     listFavorite.add(movieData);
-                    listenner.OnFavoriteClick();
+                    listenner.onFavoriteClick();
                 } else {
                     listPosterImage.remove(imgPoster.getDrawable());
                     listFavorite.remove(takePosition(movieData));
-                    listenner.OnFavoriteClick();
+                    listenner.onFavoriteClick();
                     imgFavorite.setImageResource(R.drawable.ic_star_border_black);
                 }
             }
@@ -127,6 +138,17 @@ public class DetailFragment extends BaseFragment {
 
     }
 
+    private void setupRecycleView() {
+        rvActor.setHasFixedSize(true);
+        LinearLayoutManager rvLayoutManager = new LinearLayoutManager(getContext());
+        rvLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvActor.setLayoutManager(rvLayoutManager);
+        adapterActor = new ActorAdapter(getContext());
+        rvActor.setAdapter(adapterActor);
+        MainActivity main = (MainActivity) getActivity();
+        main.getParseData().getNameActorMovie(movieData.getId(), this);
+    }
+
     private int takePosition(Movie movie) {
         for (Movie m : listFavorite) {
             if (m.getTitle().contentEquals(movie.getTitle())) {
@@ -136,15 +158,12 @@ public class DetailFragment extends BaseFragment {
         return -1;
     }
 
-    public void onItemListviewClick(Movie movieData, Drawable poster) {
-        if (movieData.getTitle().contentEquals(this.movieData.getTitle())) {
-            return;
-        }
-        getParentFragment().getChildFragmentManager().beginTransaction()
-                .replace(R.id.fl_container, new DetailFragment(movieData, poster)).addToBackStack(null).commit();
-    }
-
     public String getTitle() {
         return movieData.getTitle();
+    }
+
+    @Override
+    public void onCreated(List list) {
+        adapterActor.add(list);
     }
 }

@@ -126,8 +126,8 @@ public class MainActivity extends BaseActivity {
         if (!checkConnection()) {
             return;
         }
-        parseData = new ParseData(listFilmFragment);
-        parseData.getDataFormApi(ParseData.urlApiMovie);
+        parseData = new ParseData();
+        parseData.getListMovie(listFilmFragment);
     }
 
     public boolean checkConnection() {
@@ -207,7 +207,7 @@ public class MainActivity extends BaseActivity {
             f.popBackStack();
             listFilmFragment.getCustomAdapter().notifyDataSetChanged();
             listFilmFragment.getLvMovies().setVisibility(View.VISIBLE);
-            listFilmFragment.setDetailFragment();
+            listFilmFragment.setDetailFragmentNull();
         } else {
             f.popBackStack();
         }

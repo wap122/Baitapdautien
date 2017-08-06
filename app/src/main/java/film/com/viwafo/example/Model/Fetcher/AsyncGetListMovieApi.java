@@ -24,10 +24,10 @@ import film.com.viwafo.example.Util.IOUtil;
 /**
  * Created by macintoshhd on 7/23/17.
  */
-public class AsyncApi extends AsyncTask<String, Void, List> {
+public class AsyncGetListMovieApi extends AsyncTask<String, Void, List> {
     private OnDatabaseCreated listenner;
 
-    public AsyncApi(OnDatabaseCreated listenner) {
+    public AsyncGetListMovieApi(OnDatabaseCreated listenner) {
         this.listenner = listenner;
     }
 
@@ -79,7 +79,7 @@ public class AsyncApi extends AsyncTask<String, Void, List> {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 Movie movie = new Movie();
-                movie.setId(jsonObject.getInt("id"));
+                movie.setId(jsonObject.optInt("id"));
                 movie.setTitle(jsonObject.optString("title"));
                 movie.setPosterUrl(jsonObject.optString("poster_path"));
                 movie.setReleaseDate(jsonObject.optString("release_date"));
@@ -99,8 +99,7 @@ public class AsyncApi extends AsyncTask<String, Void, List> {
     @Override
     protected void onPostExecute(List list) {
         super.onPostExecute(list);
-        listenner.OnCreated(list);
-//        parseData.mainActivity.changeFilmFragment();
+        listenner.onCreated(list);
     }
 
 }

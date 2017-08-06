@@ -9,5 +9,5 @@ import film.com.viwafo.example.Model.Entity.Movie;
  */
 
 public interface OnItemListview {
-    void OnItemListviewClick(Movie movie, Drawable poster);
+    void onItemListviewClick(Movie movie, Drawable poster);
 }

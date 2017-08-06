@@ -57,7 +57,7 @@ public class SettingFragment extends BaseFragment {
                         break;
                     }
                 }
-                listenner.OnCreated(MovieSqlite.getInstance(null).sortWithRank(rank));
+                listenner.onCreated(MovieSqlite.getInstance(null).sortWithRank(rank));
                 dlCategory.dismiss();
             }
         });

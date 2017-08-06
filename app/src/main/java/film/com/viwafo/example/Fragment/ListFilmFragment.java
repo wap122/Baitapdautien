@@ -2,6 +2,7 @@ package film.com.viwafo.example.Fragment;
 
 import android.graphics.drawable.Drawable;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -11,13 +12,12 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import film.com.viwafo.example.Activity.MainActivity;
-import film.com.viwafo.example.Adapter.CustomAdapterList;
+import film.com.viwafo.example.Adapter.ListAdapter;
 import film.com.viwafo.example.Adapter.TwoItemAdapter;
 import film.com.viwafo.example.Listener.OnDatabaseCreated;
 import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Listener.OnItemListview;
 import film.com.viwafo.example.Model.Entity.Movie;
-import film.com.viwafo.example.Model.ParseData;
 import film.com.viwafo.example.R;
 
 /**
@@ -26,7 +26,7 @@ import film.com.viwafo.example.R;
 public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated, OnFavoriteClick, OnItemListview {
 
     private ListView lvMovies;
-    private CustomAdapterList customAdapter;
+    private ListAdapter customAdapter;
     private TwoItemAdapter twoItemAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private DetailFragment detailFragment;
@@ -41,7 +41,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
         return lvMovies;
     }
 
-    public CustomAdapterList getCustomAdapter() {
+    public ListAdapter getCustomAdapter() {
         return customAdapter;
     }
 
@@ -71,7 +71,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                main.getParseData().getDataFormApi(ParseData.urlApiMovie);
+                main.getParseData().getListMovie(ListFilmFragment.this);
             }
         });
 
@@ -84,19 +84,19 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
     public void createListview() {
         listenner = (OnFavoriteClick) getFragmentManager().getFragments().get(1);
         twoItemAdapter = new TwoItemAdapter(getContext(), this);
-        customAdapter = new CustomAdapterList(getContext(), listenner);
+        customAdapter = new ListAdapter(getContext(), listenner);
         changeListViewtoList();
     }
 
     @Override
-    public void OnCreated(List list) {
+    public void onCreated(List list) {
         customAdapter.addAll(list);
         twoItemAdapter.addAll(list);
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void OnFavoriteClick() {
+    public void onFavoriteClick() {
         customAdapter.notifyDataSetChanged();
         if (detailFragment != null) {
             detailFragment.onFavoriteClick();
@@ -104,7 +104,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
     }
 
     @Override
-    public void OnItemListviewClick(Movie movieData, Drawable poster) {
+    public void onItemListviewClick(Movie movieData, Drawable poster) {
         lvMovies.setVisibility(View.INVISIBLE);
         if (getChildFragmentManager().getBackStackEntryCount() == 1) {
             if (detailFragment.getTitle().contentEquals(movieData.getTitle())) {
@@ -122,7 +122,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
         lvMovies.setOnItemClickListener(null);
     }
 
-    public void setDetailFragment() {
+    public void setDetailFragmentNull() {
         detailFragment = null;
     }
 
@@ -133,9 +133,10 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lvMovies.setVisibility(View.INVISIBLE);
                 Movie movie = (Movie) parent.getItemAtPosition(position);
-                RelativeLayout rl = (RelativeLayout) view;
+                CardView cardView = (CardView) view;
+                RelativeLayout rl = (RelativeLayout) cardView.getChildAt(0);
                 ImageView img = (ImageView) rl.getChildAt(1);
-                OnItemListviewClick(movie, img.getDrawable());
+                onItemListviewClick(movie, img.getDrawable());
             }
         });
     }

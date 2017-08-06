@@ -28,7 +28,7 @@ import film.com.viwafo.example.Util.Util;
  * Created by minhl on 27/07/2017.
  */
 
-public class CustomAdapterBookMark extends BaseAdapter {
+public class FavoriteAdapter extends BaseAdapter {
 
     private List<Movie> listFavorite;
     private Context context;
@@ -36,7 +36,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
     private List<Drawable> listPosterImange;
     private MainActivity main;
 
-    public CustomAdapterBookMark(Context context, OnFavoriteClick listenner, SharedPreferences sharedPreferences) {
+    public FavoriteAdapter(Context context, OnFavoriteClick listenner, SharedPreferences sharedPreferences) {
         super();
         listFavorite = createListFavorte(sharedPreferences);
         listPosterImange = new ArrayList<>();
@@ -120,7 +120,7 @@ public class CustomAdapterBookMark extends BaseAdapter {
                 if (!listPosterImange.isEmpty()) {
                     listPosterImange.remove(position);
                 }
-                listenner.OnFavoriteClick();
+                listenner.onFavoriteClick();
                 notifyDataSetChanged();
             }
         });
