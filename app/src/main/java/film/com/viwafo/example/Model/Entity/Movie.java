@@ -1,29 +1,89 @@
 package film.com.viwafo.example.Model.Entity;
 
-import java.io.Serializable;
-
 /**
- * Created by macintoshhd on 7/23/17.
+ * Created by minh on 8/14/17.
  */
-public class Movie implements Serializable {
-    private int id;
-    private String title;
-    private String posterUrl;
-    private String releaseDate;
-    private String voteAverage;
-    private String overview;
-    private String isAdult;
 
-    public Movie() {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+public class Movie {
+
+    @SerializedName("vote_count")
+    @Expose
+    private Integer voteCount;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("video")
+    @Expose
+    private Boolean video;
+    @SerializedName("vote_average")
+    @Expose
+    private Double voteAverage;
+    @SerializedName("title")
+    @Expose
+    private String title;
+    @SerializedName("popularity")
+    @Expose
+    private Double popularity;
+    @SerializedName("poster_path")
+    @Expose
+    private String posterPath;
+    @SerializedName("original_language")
+    @Expose
+    private String originalLanguage;
+    @SerializedName("original_title")
+    @Expose
+    private String originalTitle;
+    @SerializedName("genre_ids")
+    @Expose
+    private List<Integer> genreIds = null;
+    @SerializedName("backdrop_path")
+    @Expose
+    private String backdropPath;
+    @SerializedName("adult")
+    @Expose
+    private Boolean adult;
+    @SerializedName("overview")
+    @Expose
+    private String overview;
+    @SerializedName("release_date")
+    @Expose
+    private String releaseDate;
+
+    public Integer getVoteCount() {
+        return voteCount;
     }
 
-    public Movie(String title, String posterUrl, String releaseDate, String voteAverage, String overview, String isAdult) {
-        this.title = title;
-        this.posterUrl = posterUrl;
-        this.releaseDate = releaseDate;
+    public void setVoteCount(Integer voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Boolean getVideo() {
+        return video;
+    }
+
+    public void setVideo(Boolean video) {
+        this.video = video;
+    }
+
+    public Double getVoteAverage() {
+        return voteAverage;
+    }
+
+    public void setVoteAverage(Double voteAverage) {
         this.voteAverage = voteAverage;
-        this.overview = overview;
-        this.isAdult = isAdult;
     }
 
     public String getTitle() {
@@ -34,20 +94,60 @@ public class Movie implements Serializable {
         this.title = title;
     }
 
-    public String getReleaseDate() {
-        return releaseDate;
+    public Double getPopularity() {
+        return popularity;
     }
 
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
+    public void setPopularity(Double popularity) {
+        this.popularity = popularity;
     }
 
-    public String getVoteAverage() {
-        return voteAverage;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setVoteAverage(String voteAverage) {
-        this.voteAverage = voteAverage;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public List<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(List<Integer> genreIds) {
+        this.genreIds = genreIds;
+    }
+
+    public String getBackdropPath() {
+        return backdropPath;
+    }
+
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public Boolean getAdult() {
+        return adult;
+    }
+
+    public void setAdult(Boolean adult) {
+        this.adult = adult;
     }
 
     public String getOverview() {
@@ -58,28 +158,12 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
-    public String getIsAdult() {
-        return isAdult;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setIsAdult(String isAdult) {
-        this.isAdult = isAdult;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getPosterUrl() {
-        return posterUrl;
-    }
-
-    public void setPosterUrl(String posterUrl) {
-        this.posterUrl = posterUrl;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
 }

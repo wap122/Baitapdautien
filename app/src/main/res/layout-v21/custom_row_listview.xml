@@ -8,6 +8,8 @@
     app:cardCornerRadius="8dp">
 
     <RelativeLayout
+        android:background="#FCFAF5"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

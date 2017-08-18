@@ -26,7 +26,7 @@ import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
 import film.com.viwafo.example.Receiver.AlarmReceiver;
-import film.com.viwafo.example.Util.Util;
+import film.com.viwafo.example.Util.ObjectUtil;
 
 public class DetailFragment extends BaseFragment implements OnDatabaseCreated {
 
@@ -95,11 +95,11 @@ public class DetailFragment extends BaseFragment implements OnDatabaseCreated {
         listFavorite = b.getListFavorite();
         listPosterImage = b.getListPosterImange();
 
-        if (!Util.isNull(poster)) {
+        if (!ObjectUtil.isNull(poster)) {
             imgPoster.setImageDrawable(poster);
         } else {
             Picasso.with(context)
-                    .load("http://image.tmdb.org/t/p/w500" + movieData.getPosterUrl())
+                    .load("http://image.tmdb.org/t/p/w500" + movieData.getPosterPath())
                     .placeholder(R.drawable.ic_holder).into(imgPoster);
         }
 

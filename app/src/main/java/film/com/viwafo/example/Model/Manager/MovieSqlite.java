@@ -61,11 +61,11 @@ public class MovieSqlite extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(COLUMN_MOVIE_TITLE, student.getTitle());
-        values.put(COLUMN_MOVIE_POSTERURL, student.getPosterUrl());
+        values.put(COLUMN_MOVIE_POSTERURL, student.getPosterPath());
         values.put(COLUMN_MOVIE_RELEASE_DATE, student.getReleaseDate());
         values.put(COLUMN_MOVIE_VOTE_AVERAGE, student.getVoteAverage());
         values.put(COLUMN_MOVIE_OVERVIEW, student.getOverview());
-        values.put(COLUMN_MOVIE_ISADULT, student.getIsAdult());
+        values.put(COLUMN_MOVIE_ISADULT, student.getAdult());
 
         db.insert(TABLE_MOVIE, null, values);
 
@@ -99,11 +99,11 @@ public class MovieSqlite extends SQLiteOpenHelper {
                 Movie movie = new Movie();
                 movie.setId(Integer.parseInt(cursor.getString(0)));
                 movie.setTitle(cursor.getString(1));
-                movie.setPosterUrl(cursor.getString(2));
+                movie.setPosterPath(cursor.getString(2));
                 movie.setReleaseDate(cursor.getString(3));
-                movie.setVoteAverage(cursor.getString(4));
+                movie.setVoteAverage(cursor.getDouble(4));
                 movie.setOverview(cursor.getString(5));
-                movie.setIsAdult(cursor.getString(6));
+                movie.setAdult(Boolean.parseBoolean(cursor.getString(6)));
                 listMovies.add(movie);
                 if (listMovies.size() == 20) {
                     break;
@@ -124,11 +124,11 @@ public class MovieSqlite extends SQLiteOpenHelper {
                 Movie movie = new Movie();
                 movie.setId(Integer.parseInt(cursor.getString(0)));
                 movie.setTitle(cursor.getString(1));
-                movie.setPosterUrl(cursor.getString(2));
+                movie.setPosterPath(cursor.getString(2));
                 movie.setReleaseDate(cursor.getString(3));
-                movie.setVoteAverage(cursor.getString(4));
+                movie.setVoteAverage(cursor.getDouble(4));
                 movie.setOverview(cursor.getString(5));
-                movie.setIsAdult(cursor.getString(6));
+                movie.setAdult(Boolean.parseBoolean(cursor.getString(6)));
                 listMovies.add(movie);
                 if (listMovies.size() == 20) {
                     break;

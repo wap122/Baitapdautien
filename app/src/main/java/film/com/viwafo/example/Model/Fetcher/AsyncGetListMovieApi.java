@@ -78,16 +78,16 @@ public class AsyncGetListMovieApi extends AsyncTask<String, Void, List> {
             JSONArray jsonArray = jsonRootObject.optJSONArray("results");
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Movie movie = new Movie();
-                movie.setId(jsonObject.optInt("id"));
-                movie.setTitle(jsonObject.optString("title"));
-                movie.setPosterUrl(jsonObject.optString("poster_path"));
-                movie.setReleaseDate(jsonObject.optString("release_date"));
-                movie.setVoteAverage(jsonObject.optString("vote_average"));
-                movie.setOverview(jsonObject.optString("overview"));
-                movie.setIsAdult(jsonObject.optString("adult"));
-                list.add(movie);
-                MovieSqlite.getInstance(null).addMovie(movie);
+//                Movie movie = new Movie();
+//                movie.setId(jsonObject.optInt("id"));
+//                movie.setTitle(jsonObject.optString("title"));
+//                movie(jsonObject.optString("poster_path"));
+//                movie.setReleaseDate(jsonObject.optString("release_date"));
+//                movie.setVoteAverage(jsonObject.optString("vote_average"));
+//                movie.setOverview(jsonObject.optString("overview"));
+//                movie.setIsAdult(jsonObject.optString("adult"));
+//                list.add(movie);
+//                MovieSqlite.getInstance(null).addMovie(movie);
             }
             return list;
         } catch (JSONException e) {

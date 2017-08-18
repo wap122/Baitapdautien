@@ -6,9 +6,76 @@ import java.io.Serializable;
  * Created by minhl on 06/08/2017.
  */
 
-public class Actor implements Serializable {
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class Actor {
+
+    @SerializedName("cast_id")
+    @Expose
+    private Integer castId;
+    @SerializedName("character")
+    @Expose
+    private String character;
+    @SerializedName("credit_id")
+    @Expose
+    private String creditId;
+    @SerializedName("gender")
+    @Expose
+    private Integer gender;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("name")
+    @Expose
     private String name;
-    private String urlImage;
+    @SerializedName("order")
+    @Expose
+    private Integer order;
+    @SerializedName("profile_path")
+    @Expose
+    private Object profilePath;
+
+    public Integer getCastId() {
+        return castId;
+    }
+
+    public void setCastId(Integer castId) {
+        this.castId = castId;
+    }
+
+    public String getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
+    }
+
+    public String getCreditId() {
+        return creditId;
+    }
+
+    public void setCreditId(String creditId) {
+        this.creditId = creditId;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -18,11 +85,20 @@ public class Actor implements Serializable {
         this.name = name;
     }
 
-    public String getUrlImage() {
-        return urlImage;
+    public Integer getOrder() {
+        return order;
     }
 
-    public void setUrlImage(String urlImage) {
-        this.urlImage = urlImage;
+    public void setOrder(Integer order) {
+        this.order = order;
     }
+
+    public Object getProfilePath() {
+        return profilePath;
+    }
+
+    public void setProfilePath(Object profilePath) {
+        this.profilePath = profilePath;
+    }
+
 }

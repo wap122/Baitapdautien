@@ -11,7 +11,7 @@
         android:layout_alignEnd="@+id/imageView"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/imageView"
-        android:background="@drawable/shade"
+        android:background="@drawable/bg_favorite_number"
         android:gravity="center"
         android:textColor="@color/white"
         android:textSize="15sp" />

@@ -39,7 +39,7 @@ public class ActorAdapter extends RecyclerView.Adapter<ActorViewHolder> {
     @Override
     public void onBindViewHolder(ActorViewHolder holder, int position) {
         Actor actor = listActor.get(position);
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w500" + actor.getUrlImage())
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w500" + actor.getProfilePath().toString())
                 .placeholder(R.drawable.ic_holder).into(holder.imgPoster);
         holder.tvName.setText(actor.getName());
     }

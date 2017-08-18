@@ -22,7 +22,7 @@ import film.com.viwafo.example.Activity.MainActivity;
 import film.com.viwafo.example.Listener.OnFavoriteClick;
 import film.com.viwafo.example.Model.Entity.Movie;
 import film.com.viwafo.example.R;
-import film.com.viwafo.example.Util.Util;
+import film.com.viwafo.example.Util.ObjectUtil;
 
 /**
  * Created by minhl on 27/07/2017.
@@ -50,7 +50,7 @@ public class FavoriteAdapter extends BaseAdapter {
     private List<Movie> createListFavorte(SharedPreferences sharedPreferences) {
         Gson gson = new Gson();
         String json = sharedPreferences.getString("ListFavorite", null);
-        if (Util.isNull(json)) {
+        if (ObjectUtil.isNull(json)) {
             return new ArrayList<>();
         }
 
@@ -102,13 +102,13 @@ public class FavoriteAdapter extends BaseAdapter {
             viewHolder.imgPoster.setImageDrawable(listPosterImange.get(position));
         } else {
             Picasso.with(context)
-                    .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
+                    .load("http://image.tmdb.org/t/p/w500" + movie.getPosterPath())
                     .placeholder(R.drawable.ic_holder).into(viewHolder.imgPoster);
         }
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
         viewHolder.tvOverview.setText(movie.getOverview());
-        if (Boolean.parseBoolean(movie.getIsAdult())) {
+        if (movie.getAdult()) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
         viewHolder.imgIsFavorite.setImageResource(R.drawable.ic_start_selected);

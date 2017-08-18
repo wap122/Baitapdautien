@@ -38,24 +38,24 @@ public class AsyncGetNameActorApi extends AsyncTask<String, Void, List> {
     }
 
     private List createNameActor(String jsonStr) {
-        try {
-            List<Actor> list = new ArrayList<>();
-            JSONObject jsonRootObject = new JSONObject(jsonStr);
-            JSONArray jsonArray = jsonRootObject.optJSONArray("cast");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Actor actor = new Actor();
-                actor.setName(jsonObject.optString("name"));
-                actor.setUrlImage(jsonObject.optString("profile_path"));
-                list.add(actor);
-                if (list.size() == 20) {
-                    break;
-                }
-            }
-            return list;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            List<Actor> list = new ArrayList<>();
+//            JSONObject jsonRootObject = new JSONObject(jsonStr);
+//            JSONArray jsonArray = jsonRootObject.optJSONArray("cast");
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject jsonObject = jsonArray.getJSONObject(i);
+//                Actor actor = new Actor();
+//                actor.setName(jsonObject.optString("name"));
+//                actor.set(jsonObject.optString("profile_path"));
+//                list.add(actor);
+//                if (list.size() == 20) {
+//                    break;
+//                }
+//            }
+//            return list;
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
         return null;
     }
 

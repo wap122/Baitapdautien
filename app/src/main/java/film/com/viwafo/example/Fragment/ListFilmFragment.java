@@ -131,7 +131,7 @@ public class ListFilmFragment extends BaseFragment implements OnDatabaseCreated,
         lvMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                lvMovies.setVisibility(View.INVISIBLE);
+//                lvMovies.setVisibility(View.INVISIBLE);
                 Movie movie = (Movie) parent.getItemAtPosition(position);
                 CardView cardView = (CardView) view;
                 RelativeLayout rl = (RelativeLayout) cardView.getChildAt(0);

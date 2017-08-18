@@ -3,4 +3,5 @@
     <dimen name="size_vertical">30dp</dimen>
     <dimen name="size_icon">40dp</dimen>
     <dimen name="margin_custom_tab">30dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
 </resources>

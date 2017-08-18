@@ -2,6 +2,7 @@ package film.com.viwafo.example.Activity;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -32,6 +34,7 @@ import film.com.viwafo.example.Model.Manager.MovieSqlite;
 import film.com.viwafo.example.Model.ParseData;
 import film.com.viwafo.example.R;
 import film.com.viwafo.example.Util.UtilPermissions;
+import retrofit2.Retrofit;
 
 import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.INTERNET;
@@ -44,6 +47,7 @@ import static android.Manifest.permission.WAKE_LOCK;
 public class MainActivity extends BaseActivity {
 
     private static final int REQUEST_PERMISSIONS = 1;
+
     private TextView tvFavoriteNum;
     private ParseData parseData;
     private TabLayout tabLayout;
@@ -65,6 +69,7 @@ public class MainActivity extends BaseActivity {
         customViewpagerTab2();
         getDatatFromServer();
         setupView();
+
     }
 
     private void setupView() {
@@ -145,7 +150,7 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(this, "Mạng sida rồi", Toast.LENGTH_SHORT).show();
             return false;
         }
-//        Toast.makeText(this, "Xài Wifi chùa dc rồi đó", Toast.LENGTH_SHORT).show();
+//        Toast.makeTexyt(this, "Xài Wifi chùa dc rồi đó", Toast.LENGTH_SHORT).show();
         return true;
     }
 

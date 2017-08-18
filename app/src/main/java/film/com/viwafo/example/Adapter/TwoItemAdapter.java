@@ -67,7 +67,7 @@ public class TwoItemAdapter extends BaseAdapter {
         }
         final Movie movie1 = (Movie) getItem(position * 2);
         Picasso.with(context)
-                .load("http://image.tmdb.org/t/p/w500" + movie1.getPosterUrl())
+                .load("http://image.tmdb.org/t/p/w500" + movie1.getPosterPath())
                 .placeholder(R.drawable.ic_holder).into(viewHolder.imgPoster1);
         viewHolder.imgPoster1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +80,7 @@ public class TwoItemAdapter extends BaseAdapter {
 
         final Movie movie2 = (Movie) getItem(position * 2 + 1);
         Picasso.with(context)
-                .load("http://image.tmdb.org/t/p/w500" + movie2.getPosterUrl())
+                .load("http://image.tmdb.org/t/p/w500" + movie2.getPosterPath())
                 .placeholder(R.drawable.ic_holder).into(viewHolder.imgPoster2);
         viewHolder.tvTitle2.setText(movie2.getTitle());
 

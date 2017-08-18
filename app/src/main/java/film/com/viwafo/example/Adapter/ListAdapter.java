@@ -89,7 +89,7 @@ public class ListAdapter extends BaseAdapter implements Filterable {
         final Movie movie = listMovie.get(position);
         viewHolder.tvTitle.setText(movie.getTitle());
         Picasso.with(context)
-                .load("http://image.tmdb.org/t/p/w500" + movie.getPosterUrl())
+                .load("http://image.tmdb.org/t/p/w500" + movie.getPosterPath())
                 .placeholder(R.drawable.ic_holder).into(viewHolder.imgPoster);
         viewHolder.tvReleaseDate.setText(movie.getReleaseDate());
         viewHolder.tvVoteAverage.setText(movie.getVoteAverage() + "/10");
@@ -99,7 +99,7 @@ public class ListAdapter extends BaseAdapter implements Filterable {
         } else {
             viewHolder.imgFavorite.setImageResource(R.drawable.ic_star_border_black);
         }
-        if (Boolean.parseBoolean(movie.getIsAdult())) {
+        if (movie.getAdult()) {
             viewHolder.imgIsAdult.setVisibility(View.INVISIBLE);
         }
 
